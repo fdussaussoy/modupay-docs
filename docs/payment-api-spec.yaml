@@ -17,12 +17,12 @@ info:
     Tous les événements majeurs déclenchent des webhooks avec signature HMAC-SHA256.
   contact:
     name: Support API
-    email: api-support@modupay.fr
+    email: api-support@votreplateforme.fr
 
 servers:
-  - url: https://api.sandbox.modupay.fr/v1
+  - url: https://api.sandbox.votreplateforme.fr/v1
     description: Sandbox
-  - url: https://api.modupay.fr/v1
+  - url: https://api.votreplateforme.fr/v1
     description: Production
 
 security:
@@ -1192,7 +1192,7 @@ components:
         payment_page_url:
           type: string
           format: uri
-          example: https://pay.modupay.fr/p/abc123xyz
+          example: https://pay.votreplateforme.fr/p/abc123xyz
         qr_code_data:
           type: string
         status:
