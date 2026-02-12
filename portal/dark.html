@@ -1554,7 +1554,7 @@
         <div>
           <div style="font-size:11px;color:var(--text-muted);margin-bottom:3px;text-transform:uppercase;letter-spacing:.5px">Payeur</div>
           <div style="font-size:14px;font-weight:500">Jean Dupont</div>
-          <div style="font-size:12px;color:var(--text-muted)"><a href="/cdn-cgi/l/email-protection" class="__cf_email__" data-cfemail="e48e81858aca8091948b8a90a48189858d88ca8296">[email&#160;protected]</a></div>
+          <div style="font-size:12px;color:var(--text-muted)">jean.dupont@email.fr</div>
           <div style="font-size:12px;color:var(--text-muted)">15 rue de la Paix, 69002 Lyon</div>
         </div>
         <div style="text-align:right">
@@ -1608,7 +1608,7 @@
   </div>
 </div>
 
-<script data-cfasync="false" src="/cdn-cgi/scripts/5c5dd728/cloudflare-static/email-decode.min.js"></script><script>
+<script>
   // ── MODAL MANAGEMENT ──
   function openModal(id) {
     document.querySelectorAll('.modal-backdrop').forEach(m => m.classList.remove('open'));
@@ -1701,4 +1701,11 @@
   // ── PAGE BUTTONS ──
   document.querySelectorAll('.page-btn').forEach(btn => {
     btn.addEventListener('click', () => {
-      if (btn.textContent === '‹' || btn.textContent === 
+      if (btn.textContent === '‹' || btn.textContent === '›' || btn.textContent === '…') return;
+      btn.closest('.pagination-btns').querySelectorAll('.page-btn').forEach(b => b.classList.remove('active'));
+      btn.classList.add('active');
+    });
+  });
+</script>
+</body>
+</html>
