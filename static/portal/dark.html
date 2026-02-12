@@ -1,0 +1,564 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Modupay — Portail de gestion (Dark)</title>
+<link href="https://fonts.googleapis.com/css2?family=Syne:wght@400;600;700;800&family=DM+Sans:wght@300;400;500&display=swap" rel="stylesheet">
+<style>
+:root{--bg:#0d0f14;--surface:#13161e;--surface2:#1a1e28;--surface3:#21263300;--border:#ffffff0f;--border-soft:#ffffff06;--accent:#e8ff4a;--accent-h:#f0ff6a;--accent-lt:#e8ff4a14;--text:#f0f2f8;--text-muted:#6b7280;--text-dim:#9ca3af;--red:#ff4a6b;--green:#4af0a0;--orange:#ffaa4a;--blue:#4a9fff;--shadow:0 1px 3px rgba(0,0,0,.3),0 4px 16px rgba(0,0,0,.2);--shadow-md:0 4px 24px rgba(0,0,0,.4),0 1px 4px rgba(0,0,0,.2)}
+*{margin:0;padding:0;box-sizing:border-box}
+body{font-family:'DM Sans',sans-serif;background:var(--bg);color:var(--text);display:flex;height:100vh;overflow:hidden;font-size:14px}
+.sidebar{width:244px;min-width:244px;background:var(--surface);border-right:1px solid var(--border);display:flex;flex-direction:column;box-shadow:2px 0 8px rgba(0,0,0,.04);z-index:10}
+.logo{padding:20px 18px 16px;border-bottom:1px solid var(--border);display:flex;align-items:center;gap:10px}
+.logo-env{margin-left:auto;font-size:10px;font-weight:600;background:#4af0a01a;color:#4af0a0;padding:2px 8px;border-radius:20px}
+.org-selector{margin:14px 14px 8px;background:var(--surface2);border:1px solid var(--border);border-radius:10px;padding:10px 12px;cursor:pointer;display:flex;align-items:center;gap:10px;transition:border-color .15s}
+.org-selector:hover{border-color:#c8ccd6}
+.org-avatar{width:34px;height:34px;background:var(--accent-lt);border-radius:8px;display:flex;align-items:center;justify-content:center;font-size:14px;font-weight:700;color:var(--accent);flex-shrink:0}
+.org-name{font-size:13px;font-weight:600;color:var(--text);white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.org-type{font-size:11px;color:var(--text-muted);margin-top:1px}
+.nav{flex:1;padding:6px 10px;overflow-y:auto}
+.nav-label{font-size:10.5px;font-weight:600;color:var(--text-muted);letter-spacing:.7px;text-transform:uppercase;padding:12px 10px 5px}
+.nav-item{display:flex;align-items:center;gap:9px;padding:8px 10px;border-radius:8px;cursor:pointer;transition:all .15s;color:var(--text-dim);font-size:13.5px;user-select:none}
+.nav-item:hover{background:var(--surface2);color:var(--text)}
+.nav-item.active{background:var(--accent-lt);color:var(--accent);font-weight:500}
+.nav-icon{width:18px;text-align:center;font-size:15px;flex-shrink:0}
+.nav-badge{margin-left:auto;font-size:10.5px;font-weight:600;padding:1px 7px;border-radius:20px;min-width:20px;text-align:center}
+.nb-red{background:#fde8e8;color:var(--red)}
+.nb-orange{background:#fef3e2;color:var(--orange)}
+.sidebar-footer{padding:14px;border-top:1px solid var(--border)}
+.user-card{display:flex;align-items:center;gap:10px;padding:8px 10px;border-radius:10px;cursor:pointer;transition:background .15s}
+.user-card:hover{background:var(--surface2)}
+.avatar{width:34px;height:34px;border-radius:50%;background:linear-gradient(135deg,var(--accent),#e74c3c);display:flex;align-items:center;justify-content:center;font-size:12px;font-weight:700;color:white;flex-shrink:0}
+.main{flex:1;display:flex;flex-direction:column;overflow:hidden}
+.topbar{height:58px;border-bottom:1px solid var(--border);display:flex;align-items:center;padding:0 24px;gap:12px;background:var(--surface);flex-shrink:0}
+.page-title{font-family:'Syne',sans-serif;font-weight:700;font-size:17px;color:var(--text);letter-spacing:-.2px;margin-right:auto}
+.topbar-actions{display:flex;align-items:center;gap:10px}
+.search-wrap{position:relative}
+.search-wrap::before{content:'⌕';position:absolute;left:10px;top:50%;transform:translateY(-50%);color:var(--text-muted);font-size:17px;pointer-events:none}
+.search-bar{background:var(--surface2);border:1px solid var(--border);border-radius:8px;padding:7px 12px 7px 34px;font-family:'DM Sans',sans-serif;font-size:13px;color:var(--text);width:230px;outline:none;transition:border-color .2s,box-shadow .2s}
+.search-bar:focus{border-color:var(--accent);box-shadow:0 0 0 3px rgba(192,57,43,.1)}
+.search-bar::placeholder{color:var(--text-muted)}
+.btn{display:inline-flex;align-items:center;gap:7px;padding:8px 16px;border-radius:8px;border:none;cursor:pointer;font-family:'DM Sans',sans-serif;font-size:13px;font-weight:500;transition:all .15s;white-space:nowrap}
+.btn-primary{background:var(--accent);color:white;box-shadow:0 1px 3px rgba(192,57,43,.3)}
+.btn-primary:hover{background:var(--accent-h);transform:translateY(-1px)}
+.btn-ghost{background:var(--surface2);border:1px solid var(--border);color:var(--text-dim);box-shadow:var(--shadow)}
+.btn-ghost:hover{background:var(--surface2);color:var(--text);border-color:#c8ccd6}
+.btn-danger{background:#fde8e8;border:1px solid #f5c6c6;color:var(--red)}
+.btn-danger:hover{background:#fbd5d5}
+.icon-btn{width:36px;height:36px;border-radius:8px;border:1px solid var(--border);background:white;display:flex;align-items:center;justify-content:center;cursor:pointer;color:var(--text-dim);font-size:15px;transition:all .15s;box-shadow:var(--shadow);position:relative}
+.icon-btn:hover{border-color:#c8ccd6;color:var(--text)}
+.notif-dot::after{content:'';position:absolute;top:7px;right:7px;width:7px;height:7px;border-radius:50%;background:var(--red);border:2px solid white}
+.content{flex:1;overflow-y:auto;padding:24px}
+.kpi-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:16px;margin-bottom:24px}
+.kpi-card{background:var(--surface);border:1px solid var(--border);border-radius:12px;padding:18px 20px;box-shadow:var(--shadow);transition:box-shadow .2s,transform .2s;animation:fadeUp .4s ease both}
+.kpi-card:hover{box-shadow:var(--shadow-md);transform:translateY(-2px)}
+.kpi-card:nth-child(1){animation-delay:.05s}
+.kpi-card:nth-child(2){animation-delay:.1s}
+.kpi-card:nth-child(3){animation-delay:.15s}
+.kpi-card:nth-child(4){animation-delay:.2s}
+.kpi-icon{width:36px;height:36px;border-radius:9px;display:flex;align-items:center;justify-content:center;font-size:17px;margin-bottom:12px}
+.kpi-label{font-size:12px;font-weight:500;color:var(--text-muted);text-transform:uppercase;letter-spacing:.5px;margin-bottom:6px}
+.kpi-value{font-family:'Syne',sans-serif;font-size:26px;font-weight:700;color:var(--text);letter-spacing:-.8px;line-height:1;margin-bottom:8px}
+.kpi-delta{display:inline-flex;align-items:center;gap:4px;font-size:12px;padding:3px 8px;border-radius:20px;font-weight:500}
+.up{background:#4af0a01a;color:#4af0a0}
+.down{background:#fde8e8;color:var(--red)}
+.flat{background:var(--surface2);color:var(--text-muted)}
+.main-grid{display:grid;grid-template-columns:1fr 320px;gap:18px}
+.panel{background:var(--surface);border:1px solid var(--border);border-radius:12px;overflow:hidden;box-shadow:var(--shadow)}
+.panel-header{padding:16px 20px;border-bottom:1px solid var(--border);display:flex;align-items:center;gap:10px}
+.panel-title{font-family:'Syne',sans-serif;font-weight:700;font-size:14px;letter-spacing:-.2px;flex:1}
+.panel-action{font-size:12px;color:var(--accent);cursor:pointer;font-weight:500}
+.tabs{display:flex;padding:0 20px;border-bottom:1px solid var(--border);background:var(--surface2)}
+.tab{padding:12px 14px;font-size:13px;color:var(--text-muted);cursor:pointer;border-bottom:2px solid transparent;margin-bottom:-1px;transition:all .15s;display:flex;align-items:center;gap:6px;white-space:nowrap}
+.tab:hover{color:var(--text-dim)}
+.tab.active{color:var(--accent);border-bottom-color:var(--accent);font-weight:600;background:white}
+.tab-count{background:var(--surface3);border:1px solid var(--border);font-size:10.5px;padding:1px 6px;border-radius:10px;color:var(--text-muted)}
+.tab.active .tab-count{background:var(--accent-lt);border-color:#f5c6c6;color:var(--accent)}
+.filters{padding:12px 20px;border-bottom:1px solid var(--border);display:flex;align-items:center;gap:8px;flex-wrap:wrap;background:var(--surface2)}
+.filter-chip{display:inline-flex;align-items:center;gap:5px;padding:5px 12px;border-radius:20px;border:1px solid var(--border);background:white;font-size:12px;color:var(--text-dim);cursor:pointer;transition:all .15s;user-select:none;font-weight:500}
+.filter-chip:hover{border-color:#c8ccd6;color:var(--text)}
+.filter-chip.active{background:var(--accent-lt);border-color:#f5c6c6;color:var(--accent)}
+.filter-sep{width:1px;height:20px;background:var(--border);margin:0 4px}
+.filter-select{background:var(--surface2);border:1px solid var(--border);border-radius:7px;padding:5px 10px;font-family:'DM Sans',sans-serif;font-size:12px;color:var(--text-dim);outline:none;cursor:pointer}
+.table-wrap{overflow-x:auto}
+table{width:100%;border-collapse:collapse}
+thead th{padding:10px 18px;text-align:left;font-size:11.5px;font-weight:600;text-transform:uppercase;letter-spacing:.5px;color:var(--text-muted);border-bottom:1px solid var(--border);white-space:nowrap;cursor:pointer;background:var(--surface2)}
+thead th.sorted{color:var(--accent)}
+tbody tr{border-bottom:1px solid var(--border-soft);transition:background .1s;cursor:pointer}
+tbody tr:hover{background:#ffffff04}
+tbody tr:last-child{border-bottom:none}
+tbody td{padding:12px 18px;font-size:13px;color:var(--text-dim);white-space:nowrap}
+.td-primary{color:var(--text);font-weight:500}
+.td-mono{font-family:'Syne',sans-serif;font-size:12.5px;font-weight:700;color:var(--text);letter-spacing:-.3px}
+.badge{display:inline-flex;align-items:center;gap:5px;padding:3px 9px;border-radius:20px;font-size:11.5px;font-weight:500}
+.badge::before{content:'';width:5px;height:5px;border-radius:50%;background:currentColor}
+.b-green{background:#4af0a01a;color:#4af0a0}
+.b-orange{background:#ffaa4a1a;color:#ffaa4a}
+.b-red{background:#ff4a6b1a;color:#ff4a6b}
+.b-purple{background:#a78bfa1a;color:#a78bfa}
+.b-gray{background:var(--surface2);color:var(--text-muted)}
+.row-actions{display:flex;gap:6px;opacity:0;transition:opacity .15s}
+tbody tr:hover .row-actions{opacity:1}
+.row-btn{padding:4px 10px;border-radius:6px;border:1px solid var(--border);background:white;font-size:11.5px;color:var(--text-dim);cursor:pointer;transition:all .15s;font-family:'DM Sans',sans-serif}
+.row-btn:hover{border-color:#c8ccd6;color:var(--text)}
+.row-btn.primary{border-color:#f5c6c6;color:var(--accent);background:var(--accent-lt)}
+.row-btn.primary:hover{background:#fbd5d5}
+.row-btn.danger{border-color:#f5c6c6;color:var(--red);background:#fde8e8}
+.tag{display:inline-block;padding:2px 8px;border-radius:5px;font-size:11px;font-weight:500;background:var(--surface2);border:1px solid var(--border);color:var(--text-muted)}
+.tag.eau{background:#4a9fff1a;border-color:#4a9fff44;color:#4a9fff}
+.tag.elec{background:#ffaa4a1a;border-color:#ffaa4a44;color:#ffaa4a}
+.tag.resto{background:#4af0a01a;border-color:#4af0a044;color:#4af0a0}
+.table-footer{padding:14px 20px;border-top:1px solid var(--border);display:flex;align-items:center;justify-content:space-between;background:var(--surface2)}
+.pagination-info{font-size:12px;color:var(--text-muted)}
+.pagination-btns{display:flex;gap:4px}
+.page-btn{width:30px;height:30px;border-radius:7px;border:1px solid var(--border);background:white;color:var(--text-dim);display:flex;align-items:center;justify-content:center;cursor:pointer;font-size:12px;transition:all .15s;font-family:'DM Sans',sans-serif}
+.page-btn:hover{border-color:#c8ccd6;color:var(--text)}
+.page-btn.active{background:var(--accent);border-color:var(--accent);color:white;font-weight:600}
+.side-panels{display:flex;flex-direction:column;gap:18px}
+.activity-item{display:flex;align-items:flex-start;gap:10px;padding:11px 18px;border-bottom:1px solid var(--border-soft);transition:background .1s;cursor:pointer}
+.activity-item:hover{background:#ffffff04}
+.activity-item:last-child{border-bottom:none}
+.activity-dot{width:8px;height:8px;border-radius:50%;margin-top:5px;flex-shrink:0}
+.activity-text{font-size:12.5px;color:var(--text-dim);line-height:1.5}
+.activity-text strong{color:var(--text);font-weight:600}
+.activity-time{font-size:11px;color:var(--text-muted);margin-top:2px}
+.chart-area{padding:18px}
+.bar-chart{display:flex;align-items:flex-end;gap:6px;height:80px}
+.bar-col{flex:1;display:flex;flex-direction:column;align-items:center;gap:4px}
+.bar{width:100%;border-radius:5px 5px 0 0;cursor:pointer;transition:opacity .2s}
+.bar:hover{opacity:.75}
+.bar-label{font-size:10px;color:var(--text-muted)}
+.export-menu{position:relative}
+.dropdown{position:absolute;top:calc(100% + 6px);right:0;background:var(--surface);border:1px solid var(--border);border-radius:10px;min-width:165px;z-index:50;overflow:hidden;opacity:0;transform:translateY(-8px);pointer-events:none;transition:all .15s;box-shadow:var(--shadow-md)}
+.dropdown.open{opacity:1;transform:none;pointer-events:all}
+.dropdown-item{padding:10px 14px;font-size:13px;color:var(--text-dim);cursor:pointer;display:flex;align-items:center;gap:9px;transition:background .1s}
+.dropdown-item:hover{background:var(--surface2);color:var(--text)}
+.dropdown-sep{height:1px;background:var(--border)}
+.modal-backdrop{position:fixed;inset:0;background:rgba(26,29,36,.45);backdrop-filter:blur(3px);display:flex;align-items:center;justify-content:center;z-index:100;opacity:0;pointer-events:none;transition:opacity .2s}
+.modal-backdrop.open{opacity:1;pointer-events:all}
+.modal{background:var(--surface);border:1px solid var(--border);border-radius:16px;width:480px;max-width:96vw;box-shadow:0 20px 60px rgba(0,0,0,.15);transform:translateY(16px);transition:transform .25s}
+.modal-backdrop.open .modal{transform:translateY(0)}
+.modal-wide{width:560px}
+.modal-header{padding:20px 22px 16px;border-bottom:1px solid var(--border);display:flex;align-items:center;justify-content:space-between}
+.modal-title{font-family:'Syne',sans-serif;font-size:16px;font-weight:700;letter-spacing:-.3px}
+.modal-close{width:28px;height:28px;border-radius:7px;border:1px solid var(--border);background:var(--surface2);color:var(--text-muted);display:flex;align-items:center;justify-content:center;cursor:pointer;font-size:14px;transition:all .15s}
+.modal-close:hover{background:var(--surface3);color:var(--text)}
+.modal-body{padding:20px 22px}
+.modal-body-flush{padding:0}
+.modal-footer{padding:14px 22px;border-top:1px solid var(--border);display:flex;justify-content:flex-end;gap:10px;background:var(--surface2);border-radius:0 0 16px 16px;border-top:1px solid var(--border)}
+.form-group{margin-bottom:16px}
+.form-label{display:block;font-size:12px;font-weight:600;color:var(--text-dim);margin-bottom:6px;text-transform:uppercase;letter-spacing:.5px}
+.form-input{width:100%;background:var(--surface2);border:1.5px solid var(--border);border-radius:9px;padding:9px 13px;font-family:'DM Sans',sans-serif;font-size:13.5px;color:var(--text);outline:none;transition:border-color .2s,box-shadow .2s}
+.form-input:focus{border-color:var(--accent);box-shadow:0 0 0 3px rgba(192,57,43,.1)}
+.form-input::placeholder{color:var(--text-muted)}
+.form-row{display:grid;grid-template-columns:1fr 1fr;gap:14px}
+.form-hint{font-size:11px;color:var(--text-muted);margin-top:5px}
+.amount-preview{background:var(--accent-lt);border:1.5px solid #f5c6c6;border-radius:10px;padding:14px;display:flex;justify-content:space-between;align-items:center;margin-top:16px}
+.amount-value{font-family:'Syne',sans-serif;font-size:24px;font-weight:700;color:var(--accent);letter-spacing:-.5px}
+.toast{position:fixed;bottom:24px;right:24px;background:var(--surface);border:1px solid var(--border);border-left:3px solid var(--green);border-radius:10px;padding:12px 16px;display:flex;align-items:center;gap:10px;z-index:200;font-size:13.5px;box-shadow:0 8px 32px rgba(0,0,0,.12);transform:translateX(120%);transition:transform .3s cubic-bezier(.34,1.56,.64,1)}
+.toast.show{transform:none}
+.qr-layout{display:grid;grid-template-columns:160px 1fr;gap:18px;align-items:start}
+.qr-box{background:var(--surface2);border:1.5px solid var(--border);border-radius:12px;padding:12px;text-align:center}
+.qr-info-row{display:flex;justify-content:space-between;font-size:12.5px;margin-bottom:6px}
+.qr-action-list{display:flex;flex-direction:column;gap:8px}
+@keyframes fadeUp{from{opacity:0;transform:translateY(10px)}to{opacity:1;transform:none}}
+::-webkit-scrollbar{width:5px;height:5px}
+::-webkit-scrollbar-track{background:transparent}
+::-webkit-scrollbar-thumb{background:var(--border);border-radius:3px}
+</style>
+</head>
+<body>
+<nav class="sidebar">
+  <div class="logo">
+    <svg viewBox="0 0 140 34" width="140" height="34" xmlns="http://www.w3.org/2000/svg">
+      <rect width="34" height="34" rx="7" fill="#e8ff4a"/>
+      <text x="9" y="24" font-family="Syne,sans-serif" font-weight="800" font-size="19" fill="#0d0f14">M</text>
+      <text x="43" y="23" font-family="Syne,sans-serif" font-weight="700" font-size="16" fill="#f0f2f8">modo</text>
+      <text x="89" y="23" font-family="Syne,sans-serif" font-weight="700" font-size="16" fill="#e8ff4a">pay</text>
+    </svg>
+    <span class="logo-env">PROD</span>
+  </div>
+  <div class="org-selector">
+    <div class="org-avatar">ML</div>
+    <div style="flex:1;min-width:0"><div class="org-name">Mairie de Lyon</div><div class="org-type">Collectivité publique</div></div>
+    <span style="color:var(--text-muted);font-size:11px">⌄</span>
+  </div>
+  <div class="nav">
+    <div class="nav-label">Vue d'ensemble</div>
+    <div class="nav-item" onclick="switchPage('dashboard',this)"><span class="nav-icon">▦</span> Tableau de bord</div>
+    <div class="nav-label">Facturation</div>
+    <div class="nav-item active" onclick="switchPage('invoices',this)"><span class="nav-icon">≡</span> Factures <span class="nav-badge nb-orange">7</span></div>
+    <div class="nav-item" onclick="switchPage('links',this)"><span class="nav-icon">⊹</span> Liens de paiement</div>
+    <div class="nav-label">Paiements</div>
+    <div class="nav-item" onclick="switchPage('intents',this)"><span class="nav-icon">◉</span> Intentions <span class="nav-badge nb-red">3</span></div>
+    <div class="nav-item" onclick="switchPage('refunds',this)"><span class="nav-icon">↩</span> Remboursements</div>
+    <div class="nav-label">Configuration</div>
+    <div class="nav-item" onclick="switchPage('dept',this)"><span class="nav-icon">◈</span> Régies & Services</div>
+    <div class="nav-item" onclick="switchPage('webhooks',this)"><span class="nav-icon">⬡</span> Webhooks</div>
+    <div class="nav-item" onclick="switchPage('audit',this)"><span class="nav-icon">☰</span> Audit logs</div>
+  </div>
+  <div class="sidebar-footer">
+    <div class="user-card">
+      <div class="avatar">SL</div>
+      <div><div style="font-size:13px;font-weight:600">Sophie Laurent</div><div style="font-size:11px;color:var(--text-muted)">Administratrice</div></div>
+    </div>
+  </div>
+</nav>
+<div class="main">
+  <div class="topbar">
+    <div class="page-title" id="page-title">Factures</div>
+    <div class="topbar-actions">
+      <div class="search-wrap"><input class="search-bar" type="text" placeholder="Rechercher facture, payeur…"></div>
+      <div class="icon-btn notif-dot">🔔</div>
+      <div class="export-menu">
+        <button class="btn btn-ghost" onclick="toggleDropdown()">↓ Exporter ⌄</button>
+        <div class="dropdown" id="export-dd">
+          <div class="dropdown-item" onclick="doExport('xlsx')">📊 Excel (.xlsx)</div>
+          <div class="dropdown-item" onclick="doExport('csv')">📄 CSV (.csv)</div>
+          <div class="dropdown-sep"></div>
+          <div class="dropdown-item" onclick="doExport('pdf')">🔴 PDF (sélection)</div>
+        </div>
+      </div>
+      <button class="btn btn-primary" onclick="openModal('create-invoice')">+ Nouvelle facture</button>
+    </div>
+  </div>
+  <div class="content">
+    <div class="kpi-grid">
+      <div class="kpi-card"><div class="kpi-icon" style="background:#fde8e8">💰</div><div class="kpi-label">Chiffre du mois</div><div class="kpi-value">148 240 €</div><span class="kpi-delta up">↑ 12.4%</span></div>
+      <div class="kpi-card"><div class="kpi-icon" style="background:#e3f2fd">📄</div><div class="kpi-label">Factures émises</div><div class="kpi-value">1 247</div><span class="kpi-delta up">↑ 8.1%</span></div>
+      <div class="kpi-card"><div class="kpi-icon" style="background:#fff8e1">⏳</div><div class="kpi-label">En attente</div><div class="kpi-value">34 180 €</div><span class="kpi-delta flat">= Stable</span></div>
+      <div class="kpi-card"><div class="kpi-icon" style="background:#fde8e8">⚠️</div><div class="kpi-label">En retard</div><div class="kpi-value">7</div><span class="kpi-delta down">↑ +3 cette semaine</span></div>
+    </div>
+    <div class="main-grid">
+      <div class="panel">
+        <div class="panel-header"><div class="panel-title">Toutes les factures</div><div class="panel-action">Colonnes ⊞</div></div>
+        <div class="tabs">
+          <div class="tab active" onclick="switchTab(this)">Toutes <span class="tab-count">1 247</span></div>
+          <div class="tab" onclick="switchTab(this)">Émises <span class="tab-count">312</span></div>
+          <div class="tab" onclick="switchTab(this)">Payées <span class="tab-count">908</span></div>
+          <div class="tab" onclick="switchTab(this)">En retard <span class="tab-count">7</span></div>
+          <div class="tab" onclick="switchTab(this)">Annulées <span class="tab-count">20</span></div>
+        </div>
+        <div class="filters">
+          <span class="filter-chip active">Toutes les régies</span>
+          <span class="filter-chip" onclick="this.classList.toggle('active')">Régie Eau</span>
+          <span class="filter-chip" onclick="this.classList.toggle('active')">Électricité</span>
+          <span class="filter-chip" onclick="this.classList.toggle('active')">Cantines</span>
+          <div class="filter-sep"></div>
+          <select class="filter-select"><option>Toutes périodes</option><option>Ce mois</option><option>T1 2026</option></select>
+          <select class="filter-select"><option>Date ↓</option><option>Montant ↓</option><option>Statut</option></select>
+        </div>
+        <div class="table-wrap">
+          <table>
+            <thead><tr>
+              <th><input type="checkbox" style="accent-color:var(--accent)"></th>
+              <th class="sorted">N° Facture ↓</th><th>Payeur</th><th>Régie</th><th>Montant</th><th>Statut</th><th>Échéance</th><th></th>
+            </tr></thead>
+            <tbody>
+              <tr onclick="openModal('invoice-detail')">
+                <td><input type="checkbox" style="accent-color:var(--accent)" onclick="event.stopPropagation()"></td>
+                <td class="td-mono">FAC-2026-01247</td><td class="td-primary">Jean Dupont</td><td><span class="tag eau">Régie Eau</span></td>
+                <td class="td-mono">42,20 €</td><td><span class="badge b-orange">En attente</span></td><td>28 fév. 2026</td>
+                <td><div class="row-actions"><div class="row-btn primary" onclick="event.stopPropagation();openModal('gen-link')">🔗 Lien</div><div class="row-btn" onclick="event.stopPropagation();openModal('invoice-detail')">👁 Voir</div></div></td>
+              </tr>
+              <tr>
+                <td><input type="checkbox" style="accent-color:var(--accent)" onclick="event.stopPropagation()"></td>
+                <td class="td-mono">FAC-2026-01246</td><td class="td-primary">Marie Leblanc</td><td><span class="tag eau">Régie Eau</span></td>
+                <td class="td-mono">78,60 €</td><td><span class="badge b-green">Payée</span></td><td>15 fév. 2026</td>
+                <td><div class="row-actions"><div class="row-btn danger" onclick="event.stopPropagation();openModal('refund')">↩ Remb.</div><div class="row-btn" onclick="event.stopPropagation()">👁 Voir</div></div></td>
+              </tr>
+              <tr>
+                <td><input type="checkbox" style="accent-color:var(--accent)" onclick="event.stopPropagation()"></td>
+                <td class="td-mono">FAC-2026-01245</td><td class="td-primary">SARL Micro Service</td><td><span class="tag resto">Cantines</span></td>
+                <td class="td-mono">1 240,00 €</td><td><span class="badge b-red">En retard</span></td><td>01 fév. 2026</td>
+                <td><div class="row-actions"><div class="row-btn primary" onclick="event.stopPropagation();openModal('gen-link')">🔗 Lien</div><div class="row-btn" onclick="event.stopPropagation()">👁 Voir</div></div></td>
+              </tr>
+              <tr>
+                <td><input type="checkbox" style="accent-color:var(--accent)" onclick="event.stopPropagation()"></td>
+                <td class="td-mono">FAC-2026-01244</td><td class="td-primary">Pierre Martin</td><td><span class="tag elec">Électricité</span></td>
+                <td class="td-mono">93,15 €</td><td><span class="badge b-green">Payée</span></td><td>10 fév. 2026</td>
+                <td><div class="row-actions"><div class="row-btn danger" onclick="event.stopPropagation();openModal('refund')">↩ Remb.</div><div class="row-btn" onclick="event.stopPropagation()">👁 Voir</div></div></td>
+              </tr>
+              <tr>
+                <td><input type="checkbox" style="accent-color:var(--accent)" onclick="event.stopPropagation()"></td>
+                <td class="td-mono">FAC-2026-01243</td><td class="td-primary">Famille Renard</td><td><span class="tag eau">Régie Eau</span></td>
+                <td class="td-mono">31,80 €</td><td><span class="badge b-purple">Part. payée</span></td><td>20 fév. 2026</td>
+                <td><div class="row-actions"><div class="row-btn primary" onclick="event.stopPropagation();openModal('gen-link')">🔗 Lien</div><div class="row-btn" onclick="event.stopPropagation()">👁 Voir</div></div></td>
+              </tr>
+              <tr>
+                <td><input type="checkbox" style="accent-color:var(--accent)" onclick="event.stopPropagation()"></td>
+                <td class="td-mono">FAC-2026-01241</td><td class="td-primary">M. Alain Fournier</td><td><span class="tag eau">Régie Eau</span></td>
+                <td class="td-mono">28,90 €</td><td><span class="badge b-gray">Brouillon</span></td><td>—</td>
+                <td><div class="row-actions"><div class="row-btn primary" onclick="event.stopPropagation();showToast('✓ Facture émise','FAC-2026-01241 active')">✓ Émettre</div><div class="row-btn" onclick="event.stopPropagation()">✎ Éditer</div></div></td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+        <div class="table-footer">
+          <div class="pagination-info">Affichage 1–6 sur 1 247 résultats</div>
+          <div class="pagination-btns">
+            <div class="page-btn">‹</div>
+            <div class="page-btn active">1</div>
+            <div class="page-btn">2</div>
+            <div class="page-btn">3</div>
+            <div class="page-btn">…</div>
+            <div class="page-btn">178</div>
+            <div class="page-btn">›</div>
+          </div>
+        </div>
+      </div>
+      <div class="side-panels">
+        <div class="panel">
+          <div class="panel-header"><div class="panel-title">Activité récente</div><div class="panel-action">Tout voir</div></div>
+          <div>
+            <div class="activity-item"><div class="activity-dot" style="background:var(--green)"></div><div><div class="activity-text"><strong>Paiement reçu</strong> — Marie Leblanc<br>FAC-2026-01246 · 78,60 €</div><div class="activity-time">Il y a 4 min</div></div></div>
+            <div class="activity-item"><div class="activity-dot" style="background:var(--accent)"></div><div><div class="activity-text"><strong>Lien créé</strong> — Jean Dupont<br>FAC-2026-01247 · Expire 14 mars</div><div class="activity-time">Il y a 22 min</div></div></div>
+            <div class="activity-item"><div class="activity-dot" style="background:var(--red)"></div><div><div class="activity-text"><strong>Retard détecté</strong> — SARL Micro<br>J+10</div><div class="activity-time">Il y a 1h</div></div></div>
+            <div class="activity-item"><div class="activity-dot" style="background:var(--orange)"></div><div><div class="activity-text"><strong>Remboursement partiel</strong><br>120,00 €</div><div class="activity-time">Il y a 3h</div></div></div>
+          </div>
+        </div>
+        <div class="panel">
+          <div class="panel-header"><div class="panel-title">Paiements — 7 jours</div></div>
+          <div class="chart-area">
+            <div class="bar-chart">
+              <div class="bar-col"><div class="bar" style="height:45px;background:linear-gradient(180deg,#e8ff4a,#4af0a0)"></div><div class="bar-label">Lun</div></div>
+              <div class="bar-col"><div class="bar" style="height:62px;background:linear-gradient(180deg,#e8ff4a,#4af0a0)"></div><div class="bar-label">Mar</div></div>
+              <div class="bar-col"><div class="bar" style="height:38px;background:linear-gradient(180deg,#e8ff4a,#4af0a0)"></div><div class="bar-label">Mer</div></div>
+              <div class="bar-col"><div class="bar" style="height:70px;background:linear-gradient(180deg,#c8e020,#e8ff4a)"></div><div class="bar-label">Jeu</div></div>
+              <div class="bar-col"><div class="bar" style="height:55px;background:linear-gradient(180deg,#e8ff4a,#4af0a0)"></div><div class="bar-label">Ven</div></div>
+              <div class="bar-col"><div class="bar" style="height:28px;background:linear-gradient(180deg,#e8ff4a33,#e8ff4a11)"></div><div class="bar-label">Sam</div></div>
+              <div class="bar-col"><div class="bar" style="height:15px;background:linear-gradient(180deg,#e8ff4a33,#e8ff4a11)"></div><div class="bar-label">Dim</div></div>
+            </div>
+            <div style="display:flex;justify-content:space-between;margin-top:14px;padding-top:14px;border-top:1px solid var(--border)">
+              <div><div style="font-size:11px;color:var(--text-muted);margin-bottom:3px">Total semaine</div><div style="font-family:'Syne',sans-serif;font-weight:700;font-size:18px">87 240 €</div></div>
+              <div style="text-align:right"><div style="font-size:11px;color:var(--text-muted);margin-bottom:3px">Taux paiement</div><div style="font-family:'Syne',sans-serif;font-weight:700;font-size:18px;color:var(--green)">94.2%</div></div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- MODAL : Nouvelle facture -->
+<div class="modal-backdrop" id="modal-create-invoice">
+  <div class="modal">
+    <div class="modal-header"><div class="modal-title">Nouvelle facture</div><div class="modal-close" onclick="closeModal('create-invoice')">✕</div></div>
+    <div class="modal-body">
+      <div class="form-row">
+        <div class="form-group"><label class="form-label">Régie</label><select class="form-input"><option>Régie de l'Eau</option><option>Électricité</option><option>Cantines</option></select></div>
+        <div class="form-group"><label class="form-label">N° Facture</label><input class="form-input" value="FAC-2026-01248" readonly style="opacity:.6;cursor:not-allowed"></div>
+      </div>
+      <div class="form-group"><label class="form-label">Nom du payeur</label><input class="form-input" placeholder="Nom complet ou raison sociale"></div>
+      <div class="form-row">
+        <div class="form-group"><label class="form-label">Email</label><input class="form-input" type="email" placeholder="email@exemple.fr"></div>
+        <div class="form-group"><label class="form-label">Échéance</label><input class="form-input" type="date" value="2026-03-15"></div>
+      </div>
+      <div class="form-group"><label class="form-label">Libellé</label><input class="form-input" placeholder="Ex: Consommation eau T1 2026"></div>
+      <div class="form-row">
+        <div class="form-group"><label class="form-label">Montant HT (€)</label><input class="form-input" id="ht-input" type="number" placeholder="0.00" oninput="calcTTC()"></div>
+        <div class="form-group"><label class="form-label">TVA</label><select class="form-input" id="tva-sel" oninput="calcTTC()"><option value="20">20%</option><option value="10">10%</option><option value="5.5" selected>5.5%</option><option value="0">0%</option></select></div>
+      </div>
+      <div class="amount-preview">
+        <div><div style="font-size:12px;color:var(--accent);font-weight:600">Montant TTC</div><div style="font-size:11px;color:var(--accent);opacity:.7;margin-top:2px" id="tva-line">TVA 5.5% : 0,00 €</div></div>
+        <div class="amount-value" id="ttc-val">0,00 €</div>
+      </div>
+    </div>
+    <div class="modal-footer">
+      <button class="btn btn-ghost" onclick="closeModal('create-invoice')">Annuler</button>
+      <button class="btn btn-ghost" onclick="closeModal('create-invoice');showToast('💾 Brouillon','FAC-2026-01248 sauvegardée')">Brouillon</button>
+      <button class="btn btn-primary" onclick="closeModal('create-invoice');showToast('✓ Facture émise','FAC-2026-01248 active')">Émettre</button>
+    </div>
+  </div>
+</div>
+
+<!-- MODAL : Générer lien -->
+<div class="modal-backdrop" id="modal-gen-link">
+  <div class="modal">
+    <div class="modal-header"><div class="modal-title">Générer un lien de paiement</div><div class="modal-close" onclick="closeModal('gen-link')">✕</div></div>
+    <div class="modal-body">
+      <div style="background:var(--surface2);border:1px solid var(--border);border-radius:10px;padding:14px;margin-bottom:18px;display:flex;justify-content:space-between;align-items:center">
+        <div><div style="font-size:11px;color:var(--text-muted);text-transform:uppercase;letter-spacing:.5px;margin-bottom:4px">Facture</div><div style="font-family:'Syne',sans-serif;font-weight:700;font-size:15px">FAC-2026-01247</div><div style="font-size:12px;color:var(--text-muted)">Jean Dupont · Régie de l'Eau</div></div>
+        <div style="text-align:right"><div style="font-size:11px;color:var(--text-muted)">Montant dû</div><div style="font-family:'Syne',sans-serif;font-size:20px;font-weight:700;color:var(--accent)">42,20 €</div></div>
+      </div>
+      <div class="form-group"><label class="form-label">Méthodes de paiement</label>
+        <div style="display:flex;gap:10px;flex-wrap:wrap;margin-top:8px">
+          <label style="display:flex;align-items:center;gap:7px;cursor:pointer;font-size:13px;background:var(--surface2);border:1.5px solid var(--border);padding:8px 12px;border-radius:8px"><input type="checkbox" checked style="accent-color:var(--accent)"> 🏦 Virement SEPA</label>
+          <label style="display:flex;align-items:center;gap:7px;cursor:pointer;font-size:13px;background:var(--surface2);border:1.5px solid var(--border);padding:8px 12px;border-radius:8px"><input type="checkbox" checked style="accent-color:var(--accent)"> 💳 Carte bancaire</label>
+        </div>
+      </div>
+      <div class="form-row">
+        <div class="form-group"><label class="form-label">Expiration</label><input class="form-input" type="date" value="2026-03-14"></div>
+        <div class="form-group"><label class="form-label">URL de retour</label><input class="form-input" value="https://mairie-lyon.fr/ok"></div>
+      </div>
+    </div>
+    <div class="modal-footer">
+      <button class="btn btn-ghost" onclick="closeModal('gen-link')">Annuler</button>
+      <button class="btn btn-primary" onclick="closeModal('gen-link');openModal('link-result')">Générer →</button>
+    </div>
+  </div>
+</div>
+
+<!-- MODAL : Lien généré + QR -->
+<div class="modal-backdrop" id="modal-link-result">
+  <div class="modal modal-wide">
+    <div class="modal-header">
+      <div><div class="modal-title">🔗 Lien de paiement créé</div><div style="font-size:12px;color:var(--text-muted);margin-top:2px">FAC-2026-01247 · Expire le 14 mars 2026</div></div>
+      <div style="display:flex;align-items:center;gap:8px"><span class="badge b-green">Actif</span><div class="modal-close" onclick="closeModal('link-result')">✕</div></div>
+    </div>
+    <div class="modal-body">
+      <div style="background:var(--surface2);border:1.5px solid var(--border);border-radius:10px;padding:12px 16px;display:flex;align-items:center;gap:10px;margin-bottom:20px">
+        <div style="flex:1;min-width:0"><div style="font-family:monospace;font-size:12.5px;color:var(--text);white-space:nowrap;overflow:hidden;text-overflow:ellipsis">https://pay.modupay.fr/p/fac01247-abc123xyz</div><div style="font-size:11px;color:var(--text-muted);margin-top:3px">SEPA · Carte · Expire 14/03/2026</div></div>
+        <button class="btn btn-ghost" style="padding:6px 12px;font-size:12px;flex-shrink:0" onclick="showToast('📋 URL copiée','Collez dans votre email ou SMS')">Copier</button>
+      </div>
+      <div class="qr-layout">
+        <div class="qr-box">
+          <svg width="136" height="136" viewBox="0 0 37 37" xmlns="http://www.w3.org/2000/svg" style="display:block;margin:0 auto">
+            <rect x="1" y="1" width="7" height="7" rx=".6" fill="#e8ff4a"/><rect x="2" y="2" width="5" height="5" rx=".3" fill="white"/><rect x="3" y="3" width="3" height="3" rx=".2" fill="#e8ff4a"/>
+            <rect x="29" y="1" width="7" height="7" rx=".6" fill="#e8ff4a"/><rect x="30" y="2" width="5" height="5" rx=".3" fill="white"/><rect x="31" y="3" width="3" height="3" rx=".2" fill="#e8ff4a"/>
+            <rect x="1" y="29" width="7" height="7" rx=".6" fill="#e8ff4a"/><rect x="2" y="30" width="5" height="5" rx=".3" fill="white"/><rect x="3" y="31" width="3" height="3" rx=".2" fill="#e8ff4a"/>
+            <rect x="9" y="1" width="2" height="1" fill="#f0f2f8"/><rect x="12" y="1" width="3" height="1" fill="#f0f2f8"/><rect x="17" y="1" width="2" height="1" fill="#f0f2f8"/><rect x="21" y="1" width="1" height="1" fill="#f0f2f8"/><rect x="24" y="1" width="2" height="1" fill="#f0f2f8"/>
+            <rect x="9" y="3" width="1" height="1" fill="#f0f2f8"/><rect x="12" y="3" width="2" height="1" fill="#f0f2f8"/><rect x="16" y="3" width="3" height="1" fill="#f0f2f8"/><rect x="21" y="3" width="2" height="1" fill="#f0f2f8"/><rect x="25" y="3" width="1" height="1" fill="#f0f2f8"/>
+            <rect x="10" y="5" width="3" height="1" fill="#f0f2f8"/><rect x="15" y="5" width="2" height="1" fill="#f0f2f8"/><rect x="19" y="5" width="1" height="1" fill="#f0f2f8"/><rect x="23" y="5" width="2" height="1" fill="#f0f2f8"/>
+            <rect x="9" y="8" width="2" height="1" fill="#f0f2f8"/><rect x="13" y="8" width="3" height="1" fill="#f0f2f8"/><rect x="18" y="8" width="2" height="1" fill="#f0f2f8"/><rect x="23" y="8" width="3" height="1" fill="#f0f2f8"/><rect x="28" y="8" width="2" height="1" fill="#f0f2f8"/><rect x="32" y="8" width="3" height="1" fill="#f0f2f8"/>
+            <rect x="10" y="10" width="1" height="1" fill="#f0f2f8"/><rect x="13" y="10" width="2" height="1" fill="#f0f2f8"/><rect x="17" y="10" width="3" height="1" fill="#f0f2f8"/><rect x="22" y="10" width="1" height="1" fill="#f0f2f8"/><rect x="26" y="10" width="2" height="1" fill="#f0f2f8"/><rect x="30" y="10" width="1" height="1" fill="#f0f2f8"/><rect x="33" y="10" width="3" height="1" fill="#f0f2f8"/>
+            <rect x="9" y="12" width="3" height="1" fill="#f0f2f8"/><rect x="14" y="12" width="1" height="1" fill="#f0f2f8"/><rect x="17" y="12" width="2" height="1" fill="#f0f2f8"/><rect x="21" y="12" width="3" height="1" fill="#f0f2f8"/><rect x="27" y="12" width="2" height="1" fill="#f0f2f8"/><rect x="31" y="12" width="1" height="1" fill="#f0f2f8"/><rect x="34" y="12" width="2" height="1" fill="#f0f2f8"/>
+            <rect x="14" y="14" width="9" height="9" rx="1.5" fill="white"/><rect x="15" y="15" width="7" height="7" rx="1" fill="#e8ff4a"/><text x="16.2" y="21.2" font-family="Syne,sans-serif" font-weight="800" font-size="6" fill="white">M</text>
+            <rect x="9" y="23" width="2" height="1" fill="#f0f2f8"/><rect x="13" y="23" width="3" height="1" fill="#f0f2f8"/><rect x="18" y="23" width="2" height="1" fill="#f0f2f8"/><rect x="23" y="23" width="1" height="1" fill="#f0f2f8"/><rect x="27" y="23" width="2" height="1" fill="#f0f2f8"/><rect x="32" y="23" width="3" height="1" fill="#f0f2f8"/>
+            <rect x="10" y="25" width="3" height="1" fill="#f0f2f8"/><rect x="15" y="25" width="1" height="1" fill="#f0f2f8"/><rect x="18" y="25" width="3" height="1" fill="#f0f2f8"/><rect x="23" y="25" width="2" height="1" fill="#f0f2f8"/><rect x="28" y="25" width="1" height="1" fill="#f0f2f8"/><rect x="31" y="25" width="3" height="1" fill="#f0f2f8"/>
+            <rect x="9" y="27" width="1" height="1" fill="#f0f2f8"/><rect x="12" y="27" width="2" height="1" fill="#f0f2f8"/><rect x="16" y="27" width="3" height="1" fill="#f0f2f8"/><rect x="22" y="27" width="1" height="1" fill="#f0f2f8"/><rect x="25" y="27" width="2" height="1" fill="#f0f2f8"/><rect x="30" y="27" width="1" height="1" fill="#f0f2f8"/><rect x="33" y="27" width="2" height="1" fill="#f0f2f8"/>
+          </svg>
+          <div style="font-size:10px;color:var(--text-muted);margin-top:8px">Scanner pour payer</div>
+          <button class="btn btn-ghost" style="padding:5px 10px;font-size:11px;margin-top:8px;width:100%" onclick="showToast('📥 QR téléchargé','qr-fac01247.png')">↓ Télécharger</button>
+        </div>
+        <div>
+          <div style="background:var(--accent-lt);border:1px solid #f5c6c6;border-radius:10px;padding:14px;margin-bottom:14px">
+            <div style="font-size:11px;color:var(--accent);font-weight:600;text-transform:uppercase;letter-spacing:.5px;margin-bottom:10px">Récapitulatif</div>
+            <div class="qr-info-row"><span style="color:var(--text-muted)">Montant</span><span style="font-weight:700;color:var(--accent);font-family:'Syne',sans-serif;font-size:15px">42,20 €</span></div>
+            <div class="qr-info-row"><span style="color:var(--text-muted)">Méthodes</span><span>SEPA · Carte</span></div>
+            <div class="qr-info-row"><span style="color:var(--text-muted)">Expiration</span><span>14 mars 2026</span></div>
+            <div class="qr-info-row" style="margin-bottom:0"><span style="color:var(--text-muted)">Payeur</span><span>Jean Dupont</span></div>
+          </div>
+          <div class="qr-action-list">
+            <button class="btn btn-ghost" style="justify-content:center" onclick="showToast('📋 URL copiée','Collez dans votre email')">📋 Copier le lien</button>
+            <button class="btn btn-ghost" style="justify-content:center" onclick="showToast('✉️ Email envoyé','Lien transmis à jean.dupont@email.fr')">✉️ Envoyer par email</button>
+            <button class="btn btn-ghost" style="justify-content:center" onclick="showToast('💬 SMS envoyé','Lien transmis par SMS')">💬 Envoyer par SMS</button>
+            <button class="btn btn-danger" style="justify-content:center;margin-top:4px" onclick="closeModal('link-result');showToast('Lien révoqué','FAC-2026-01247 inactif')">✕ Révoquer le lien</button>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="modal-footer">
+      <button class="btn btn-ghost" onclick="closeModal('link-result')">Fermer</button>
+      <button class="btn btn-primary" onclick="closeModal('link-result');showToast('✓ Lien partagé','Rappel dans 7 jours')">✓ Confirmer & envoyer</button>
+    </div>
+  </div>
+</div>
+
+<!-- MODAL : Remboursement -->
+<div class="modal-backdrop" id="modal-refund">
+  <div class="modal">
+    <div class="modal-header"><div class="modal-title">Créer un remboursement</div><div class="modal-close" onclick="closeModal('refund')">✕</div></div>
+    <div class="modal-body">
+      <div style="background:var(--surface2);border:1px solid var(--border);border-radius:10px;padding:14px;margin-bottom:18px;display:flex;justify-content:space-between;align-items:center">
+        <div><div style="font-size:11px;color:var(--text-muted);text-transform:uppercase;letter-spacing:.5px;margin-bottom:4px">Paiement d'origine</div><div style="font-family:'Syne',sans-serif;font-weight:700;font-size:15px">FAC-2026-01246</div><div style="font-size:12px;color:var(--text-muted)">Marie Leblanc · 9 fév. 2026</div></div>
+        <div style="text-align:right"><div style="font-size:11px;color:var(--text-muted)">Disponible</div><div style="font-family:'Syne',sans-serif;font-size:20px;font-weight:700;color:var(--green)">78,60 €</div></div>
+      </div>
+      <div class="form-group"><label class="form-label">Montant (€)</label><input class="form-input" type="number" value="78.60" max="78.60"><div class="form-hint">Maximum : 78,60 €</div></div>
+      <div class="form-group"><label class="form-label">Motif</label><input class="form-input" placeholder="Ex: Erreur de facturation…"></div>
+      <div style="background:#fff8e1;border:1px solid #ffe082;border-radius:9px;padding:11px;font-size:12px;color:#e65100">⚠️ Action irréversible. Virement sous 1-2 jours ouvrés.</div>
+    </div>
+    <div class="modal-footer">
+      <button class="btn btn-ghost" onclick="closeModal('refund')">Annuler</button>
+      <button class="btn btn-danger" onclick="closeModal('refund');showToast('↩ Remboursement initié','78,60 € · 1-2 jours ouvrés')">Confirmer</button>
+    </div>
+  </div>
+</div>
+
+<!-- MODAL : Détail facture -->
+<div class="modal-backdrop" id="modal-invoice-detail">
+  <div class="modal modal-wide">
+    <div class="modal-header">
+      <div><div class="modal-title">FAC-2026-01247</div><div style="font-size:12px;color:var(--text-muted);margin-top:2px">Régie de l'Eau · 9 fév. 2026</div></div>
+      <div style="display:flex;align-items:center;gap:8px"><span class="badge b-orange">En attente</span><div class="modal-close" onclick="closeModal('invoice-detail')">✕</div></div>
+    </div>
+    <div class="modal-body-flush">
+      <div style="padding:16px 22px;display:flex;justify-content:space-between;border-bottom:1px solid var(--border);background:var(--surface2)">
+        <div><div style="font-size:14px;font-weight:600">Jean Dupont</div><div style="font-size:12px;color:var(--text-muted)">jean.dupont@email.fr · 69002 Lyon</div></div>
+        <div style="text-align:right"><div style="font-family:'Syne',sans-serif;font-size:28px;font-weight:700;color:var(--accent)">42,20 €</div><div style="font-size:12px;color:var(--text-muted)">Échéance : 28 fév. 2026</div></div>
+      </div>
+      <table style="width:100%;border-collapse:collapse">
+        <thead><tr>
+          <th style="padding:9px 22px;text-align:left;font-size:11px;font-weight:600;text-transform:uppercase;color:var(--text-muted);border-bottom:1px solid var(--border);background:var(--surface2)">Prestation</th>
+          <th style="padding:9px 22px;text-align:right;font-size:11px;font-weight:600;text-transform:uppercase;color:var(--text-muted);border-bottom:1px solid var(--border);background:var(--surface2)">HT</th>
+          <th style="padding:9px 22px;text-align:right;font-size:11px;font-weight:600;text-transform:uppercase;color:var(--text-muted);border-bottom:1px solid var(--border);background:var(--surface2)">TVA</th>
+          <th style="padding:9px 22px;text-align:right;font-size:11px;font-weight:600;text-transform:uppercase;color:var(--text-muted);border-bottom:1px solid var(--border);background:var(--surface2)">TTC</th>
+        </tr></thead>
+        <tbody>
+          <tr style="border-bottom:1px solid var(--border-soft)"><td style="padding:12px 22px;font-size:13px;color:var(--text-dim)">Consommation eau T1 2026 — 125 m³</td><td style="padding:12px 22px;text-align:right;font-size:13px">38,00 €</td><td style="padding:12px 22px;text-align:right;font-size:12px;color:var(--text-muted)">5.5%</td><td style="padding:12px 22px;text-align:right;font-size:13px;font-weight:500">40,09 €</td></tr>
+          <tr><td style="padding:12px 22px;font-size:13px;color:var(--text-dim)">Abonnement trimestriel</td><td style="padding:12px 22px;text-align:right;font-size:13px">2,00 €</td><td style="padding:12px 22px;text-align:right;font-size:12px;color:var(--text-muted)">5.5%</td><td style="padding:12px 22px;text-align:right;font-size:13px;font-weight:500">2,11 €</td></tr>
+        </tbody>
+      </table>
+      <div style="padding:12px 22px;border-top:1px solid var(--border);display:flex;justify-content:flex-end;gap:24px;font-size:12px;color:var(--text-muted);background:var(--surface2)">
+        <span>HT : <strong style="color:var(--text)">40,00 €</strong></span>
+        <span>TVA : <strong style="color:var(--text)">2,20 €</strong></span>
+        <span>TTC : <strong style="color:var(--accent);font-family:'Syne',sans-serif;font-size:14px">42,20 €</strong></span>
+      </div>
+    </div>
+    <div class="modal-footer">
+      <button class="btn btn-ghost" onclick="closeModal('invoice-detail')">Fermer</button>
+      <button class="btn btn-ghost" onclick="showToast('📥 PDF généré','FAC-2026-01247.pdf')">↓ PDF</button>
+      <button class="btn btn-primary" onclick="closeModal('invoice-detail');openModal('gen-link')">🔗 Générer lien</button>
+    </div>
+  </div>
+</div>
+
+<!-- TOAST -->
+<div class="toast" id="toast">
+  <span id="toast-icon" style="font-size:16px">✓</span>
+  <div><div id="toast-title" style="font-weight:500;color:var(--text)"></div><div id="toast-sub" style="font-size:11.5px;color:var(--text-muted);margin-top:1px"></div></div>
+</div>
+
+<script>
+function openModal(id){document.querySelectorAll('.modal-backdrop').forEach(function(m){m.classList.remove('open')});var el=document.getElementById('modal-'+id);if(el)el.classList.add('open');closeDropdown()}
+function closeModal(id){var el=document.getElementById('modal-'+id);if(el)el.classList.remove('open')}
+document.querySelectorAll('.modal-backdrop').forEach(function(b){b.addEventListener('click',function(e){if(e.target===b)b.classList.remove('open')})});
+function toggleDropdown(){document.getElementById('export-dd').classList.toggle('open')}
+function closeDropdown(){var dd=document.getElementById('export-dd');if(dd)dd.classList.remove('open')}
+document.addEventListener('click',function(e){if(!e.target.closest('.export-menu'))closeDropdown()});
+var toastT;
+function showToast(title,sub){
+  clearTimeout(toastT);
+  document.getElementById('toast-title').textContent=title;
+  document.getElementById('toast-sub').textContent=sub||'';
+  var t=document.getElementById('toast');
+  t.classList.add('show');
+  toastT=setTimeout(function(){t.classList.remove('show')},3200);
+}
+function switchTab(el){el.closest('.tabs').querySelectorAll('.tab').forEach(function(t){t.classList.remove('active')});el.classList.add('active')}
+function switchPage(page,el){
+  document.querySelectorAll('.nav-item').forEach(function(n){n.classList.remove('active')});
+  el.classList.add('active');
+  var titles={dashboard:'Tableau de bord',invoices:'Factures',links:'Liens de paiement',intents:'Intentions',refunds:'Remboursements',dept:'Régies',webhooks:'Webhooks',audit:'Audit logs'};
+  document.getElementById('page-title').textContent=titles[page]||page;
+  showToast('Navigation','Section : '+(titles[page]||page));
+}
+function calcTTC(){
+  var ht=parseFloat(document.getElementById('ht-input').value)||0;
+  var tva=parseFloat(document.getElementById('tva-sel').value)||0;
+  var t=ht*(tva/100);
+  document.getElementById('ttc-val').textContent=(ht+t).toFixed(2).replace('.',',')+' €';
+  document.getElementById('tva-line').textContent='TVA '+tva+'% : '+t.toFixed(2).replace('.',',')+' €';
+}
+function doExport(type){closeDropdown();var l={xlsx:'Excel',csv:'CSV',pdf:'PDF'};showToast('Export '+l[type]+' en cours…','1 247 factures')}
+document.querySelectorAll('.page-btn').forEach(function(b){
+  b.addEventListener('click',function(){
+    if(b.textContent==='‹'||b.textContent==='›'||b.textContent==='…')return;
+    b.closest('.pagination-btns').querySelectorAll('.page-btn').forEach(function(x){x.classList.remove('active')});
+    b.classList.add('active');
+  });
+});
+</script>
+</body>
+</html>

@@ -1,0 +1,1277 @@
+---
+---
+{% raw %}
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Modupay — API Reference</title>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/swagger-ui/5.11.0/swagger-ui.min.css">
+  <style>
+    * { box-sizing: border-box; }
+    body { margin: 0; font-family: sans-serif; background: #f8f9fb; }
+
+    .topbar-custom {
+      background: #c0392b;
+      padding: 14px 24px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      box-shadow: 0 2px 8px rgba(0,0,0,.15);
+    }
+
+    .topbar-logo {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      text-decoration: none;
+    }
+
+    .topbar-logo svg { display: block; }
+
+    .topbar-links { display: flex; gap: 16px; }
+    .topbar-links a {
+      color: rgba(255,255,255,.8);
+      text-decoration: none;
+      font-size: 13px;
+      font-family: 'DM Sans', sans-serif;
+      padding: 6px 12px;
+      border-radius: 6px;
+      border: 1px solid rgba(255,255,255,.25);
+      transition: all .15s;
+    }
+    .topbar-links a:hover { background: rgba(255,255,255,.15); color: white; }
+
+    .swagger-ui .topbar { display: none; }
+
+    .swagger-ui .info { margin: 32px 0 24px; }
+    .swagger-ui .info .title { color: #1a1d24; }
+
+    .swagger-ui .btn.authorize {
+      background: #c0392b !important;
+      border-color: #c0392b !important;
+      color: white !important;
+    }
+
+    .swagger-ui .opblock.opblock-post .opblock-summary-method { background: #c0392b; }
+    .swagger-ui .opblock.opblock-get .opblock-summary-method { background: #2980b9; }
+    .swagger-ui .opblock.opblock-delete .opblock-summary-method { background: #e74c3c; }
+    .swagger-ui .opblock.opblock-patch .opblock-summary-method { background: #e67e22; }
+
+    .swagger-ui .opblock-tag { border-bottom: 1px solid #e4e7ee; }
+    .swagger-ui .opblock-tag:hover { background: #fdf2f1; }
+
+    #swagger-ui { max-width: 1200px; margin: 0 auto; padding: 0 24px 60px; }
+
+    .env-badge {
+      background: rgba(255,255,255,.2);
+      color: white;
+      font-size: 11px;
+      font-weight: 600;
+      padding: 3px 10px;
+      border-radius: 20px;
+      letter-spacing: .5px;
+    }
+  </style>
+  <link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600&family=Syne:wght@700;800&display=swap" rel="stylesheet">
+</head>
+<body>
+
+  <div class="topbar-custom">
+    <a class="topbar-logo" href="../../index.html">
+      <svg viewBox="0 0 140 34" width="120" height="29" xmlns="http://www.w3.org/2000/svg">
+        <rect width="34" height="34" rx="7" fill="rgba(255,255,255,0.25)"/>
+        <text x="9" y="24" font-family="Syne,sans-serif" font-weight="800" font-size="19" fill="white">M</text>
+        <text x="43" y="23" font-family="Syne,sans-serif" font-weight="700" font-size="16" fill="white">modo</text>
+        <text x="89" y="23" font-family="Syne,sans-serif" font-weight="700" font-size="16" fill="rgba(255,255,255,0.7)">pay</text>
+      </svg>
+      <span class="env-badge">API v1.0</span>
+    </a>
+    <div class="topbar-links">
+      <a href="../../index.html">← Documentation</a>
+      <a href="../portal/light.html">Portail</a>
+    </div>
+  </div>
+
+  <div id="swagger-ui"></div>
+
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/swagger-ui/5.11.0/swagger-ui-bundle.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/swagger-ui/5.11.0/swagger-ui-standalone-preset.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/js-yaml/4.1.0/js-yaml.min.js"></script>
+
+  <script>
+    const yamlSpec = `openapi: 3.0.3
+info:
+  title: API de Paiement - Plateforme Marque Blanche
+  version: 1.0.0
+  description: |
+    # API de gestion de paiements pour le marché français
+    
+    Cette API permet aux intégrateurs de gérer en marque blanche des organisations,
+    factures, paiements et remboursements avec intégration Aiia pour virements SEPA.
+    
+    ## Authentification
+    
+    Utilisez OAuth 2.0 avec tokens JWT (Bearer).
+    
+    ## Webhooks
+    
+    Tous les événements majeurs déclenchent des webhooks avec signature HMAC-SHA256.
+  contact:
+    name: Support API
+    email: api-support@votreplateforme.fr
+
+servers:
+  - url: https://api.sandbox.votreplateforme.fr/v1
+    description: Sandbox
+  - url: https://api.votreplateforme.fr/v1
+    description: Production
+
+security:
+  - BearerAuth: []
+
+tags:
+  - name: Authentication
+    description: Authentification et tokens
+  - name: Organizations
+    description: Gestion des organisations
+  - name: Departments
+    description: Gestion des régies/services
+  - name: Invoices
+    description: Gestion des factures
+  - name: Payment Links
+    description: Liens de paiement
+  - name: Payment Intents
+    description: Intentions de paiement
+  - name: Refunds
+    description: Remboursements
+
+paths:
+  /auth/token:
+    post:
+      tags:
+        - Authentication
+      summary: Obtenir un token d'accès
+      operationId: getAuthToken
+      security: []
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              required:
+                - grant_type
+                - client_id
+                - client_secret
+              properties:
+                grant_type:
+                  type: string
+                  enum:
+                    - client_credentials
+                client_id:
+                  type: string
+                client_secret:
+                  type: string
+                  format: password
+                scope:
+                  type: string
+                  enum:
+                    - partner
+                    - entity
+                entity_id:
+                  type: string
+                  format: uuid
+      responses:
+        '200':
+          description: Token généré
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  access_token:
+                    type: string
+                  token_type:
+                    type: string
+                    example: Bearer
+                  expires_in:
+                    type: integer
+                    example: 3600
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+
+  /organizations:
+    get:
+      tags:
+        - Organizations
+      summary: Lister les organisations
+      operationId: listOrganizations
+      parameters:
+        - name: page
+          in: query
+          schema:
+            type: integer
+            minimum: 1
+            default: 1
+        - name: page_size
+          in: query
+          schema:
+            type: integer
+            minimum: 1
+            maximum: 100
+            default: 20
+        - name: type
+          in: query
+          schema:
+            type: string
+            enum:
+              - company
+              - public_entity
+      responses:
+        '200':
+          description: Liste des organisations
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  data:
+                    type: array
+                    items:
+                      $ref: '#/components/schemas/Organization'
+                  pagination:
+                    $ref: '#/components/schemas/Pagination'
+    
+    post:
+      tags:
+        - Organizations
+      summary: Créer une organisation
+      operationId: createOrganization
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/OrganizationCreate'
+      responses:
+        '201':
+          description: Organisation créée
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Organization'
+        '400':
+          $ref: '#/components/responses/BadRequest'
+
+  /organizations/{organization_id}:
+    parameters:
+      - name: organization_id
+        in: path
+        required: true
+        schema:
+          type: string
+          format: uuid
+    
+    get:
+      tags:
+        - Organizations
+      summary: Récupérer une organisation
+      operationId: getOrganization
+      responses:
+        '200':
+          description: Détails de l'organisation
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Organization'
+        '404':
+          $ref: '#/components/responses/NotFound'
+
+  /organizations/{organization_id}/departments:
+    parameters:
+      - name: organization_id
+        in: path
+        required: true
+        schema:
+          type: string
+          format: uuid
+    
+    get:
+      tags:
+        - Departments
+      summary: Lister les régies/services
+      operationId: listDepartments
+      responses:
+        '200':
+          description: Liste des régies
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  data:
+                    type: array
+                    items:
+                      $ref: '#/components/schemas/Department'
+    
+    post:
+      tags:
+        - Departments
+      summary: Créer une régie/service
+      operationId: createDepartment
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/DepartmentCreate'
+      responses:
+        '201':
+          description: Régie créée
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Department'
+
+  /invoices:
+    get:
+      tags:
+        - Invoices
+      summary: Lister les factures
+      operationId: listInvoices
+      parameters:
+        - name: page
+          in: query
+          schema:
+            type: integer
+            default: 1
+        - name: status
+          in: query
+          schema:
+            type: string
+            enum:
+              - draft
+              - issued
+              - partially_paid
+              - paid
+              - overdue
+              - cancelled
+        - name: X-Entity-Id
+          in: header
+          schema:
+            type: string
+            format: uuid
+      responses:
+        '200':
+          description: Liste des factures
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  data:
+                    type: array
+                    items:
+                      $ref: '#/components/schemas/Invoice'
+                  pagination:
+                    $ref: '#/components/schemas/Pagination'
+    
+    post:
+      tags:
+        - Invoices
+      summary: Créer une facture
+      operationId: createInvoice
+      parameters:
+        - name: X-Entity-Id
+          in: header
+          required: true
+          schema:
+            type: string
+            format: uuid
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/InvoiceCreate'
+      responses:
+        '201':
+          description: Facture créée
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Invoice'
+
+  /invoices/{invoice_id}:
+    parameters:
+      - name: invoice_id
+        in: path
+        required: true
+        schema:
+          type: string
+          format: uuid
+      - name: X-Entity-Id
+        in: header
+        schema:
+          type: string
+          format: uuid
+    
+    get:
+      tags:
+        - Invoices
+      summary: Récupérer une facture
+      operationId: getInvoice
+      responses:
+        '200':
+          description: Détails de la facture
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Invoice'
+
+  /invoices/{invoice_id}/issue:
+    parameters:
+      - name: invoice_id
+        in: path
+        required: true
+        schema:
+          type: string
+          format: uuid
+      - name: X-Entity-Id
+        in: header
+        schema:
+          type: string
+          format: uuid
+    
+    post:
+      tags:
+        - Invoices
+      summary: Émettre une facture
+      operationId: issueInvoice
+      responses:
+        '200':
+          description: Facture émise
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Invoice'
+
+  /payment_links:
+    post:
+      tags:
+        - Payment Links
+      summary: Créer un lien de paiement
+      operationId: createPaymentLink
+      parameters:
+        - name: X-Entity-Id
+          in: header
+          required: true
+          schema:
+            type: string
+            format: uuid
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/PaymentLinkCreate'
+      responses:
+        '201':
+          description: Lien créé
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/PaymentLink'
+
+  /payment_links/{payment_link_id}:
+    parameters:
+      - name: payment_link_id
+        in: path
+        required: true
+        schema:
+          type: string
+          format: uuid
+      - name: X-Entity-Id
+        in: header
+        schema:
+          type: string
+          format: uuid
+    
+    get:
+      tags:
+        - Payment Links
+      summary: Récupérer un lien de paiement
+      operationId: getPaymentLink
+      responses:
+        '200':
+          description: Détails du lien
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/PaymentLink'
+
+  /payment_intents:
+    get:
+      tags:
+        - Payment Intents
+      summary: Lister les intentions de paiement
+      operationId: listPaymentIntents
+      parameters:
+        - name: page
+          in: query
+          schema:
+            type: integer
+            default: 1
+        - name: status
+          in: query
+          schema:
+            type: string
+            enum:
+              - created
+              - pending
+              - processing
+              - succeeded
+              - failed
+        - name: X-Entity-Id
+          in: header
+          schema:
+            type: string
+            format: uuid
+      responses:
+        '200':
+          description: Liste des intentions
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  data:
+                    type: array
+                    items:
+                      $ref: '#/components/schemas/PaymentIntent'
+
+  /payment_intents/{payment_intent_id}:
+    parameters:
+      - name: payment_intent_id
+        in: path
+        required: true
+        schema:
+          type: string
+          format: uuid
+      - name: X-Entity-Id
+        in: header
+        schema:
+          type: string
+          format: uuid
+    
+    get:
+      tags:
+        - Payment Intents
+      summary: Récupérer une intention de paiement
+      operationId: getPaymentIntent
+      responses:
+        '200':
+          description: Détails de l'intention
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/PaymentIntent'
+
+  /refunds:
+    post:
+      tags:
+        - Refunds
+      summary: Créer un remboursement
+      operationId: createRefund
+      parameters:
+        - name: X-Entity-Id
+          in: header
+          required: true
+          schema:
+            type: string
+            format: uuid
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/RefundCreate'
+      responses:
+        '201':
+          description: Remboursement créé
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Refund'
+
+  /refunds/{refund_id}:
+    parameters:
+      - name: refund_id
+        in: path
+        required: true
+        schema:
+          type: string
+          format: uuid
+      - name: X-Entity-Id
+        in: header
+        schema:
+          type: string
+          format: uuid
+    
+    get:
+      tags:
+        - Refunds
+      summary: Récupérer un remboursement
+      operationId: getRefund
+      responses:
+        '200':
+          description: Détails du remboursement
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Refund'
+
+components:
+  securitySchemes:
+    BearerAuth:
+      type: http
+      scheme: bearer
+      bearerFormat: JWT
+
+  schemas:
+    Organization:
+      type: object
+      required:
+        - id
+        - type
+        - name
+        - siret
+        - status
+        - created_at
+      properties:
+        id:
+          type: string
+          format: uuid
+        type:
+          type: string
+          enum:
+            - company
+            - public_entity
+        name:
+          type: string
+          maxLength: 200
+        legal_name:
+          type: string
+          maxLength: 200
+        siret:
+          type: string
+          pattern: '^\d{14}$'
+        siren:
+          type: string
+          pattern: '^\d{9}$'
+        vat_number:
+          type: string
+          pattern: '^FR\d{11}$'
+        address:
+          $ref: '#/components/schemas/Address'
+        status:
+          type: string
+          enum:
+            - active
+            - suspended
+            - closed
+        created_at:
+          type: string
+          format: date-time
+        updated_at:
+          type: string
+          format: date-time
+
+    OrganizationCreate:
+      type: object
+      required:
+        - type
+        - name
+        - siret
+      properties:
+        type:
+          type: string
+          enum:
+            - company
+            - public_entity
+        name:
+          type: string
+          maxLength: 200
+        legal_name:
+          type: string
+          maxLength: 200
+        siret:
+          type: string
+          pattern: '^\d{14}$'
+        vat_number:
+          type: string
+          pattern: '^FR\d{11}$'
+        address:
+          $ref: '#/components/schemas/Address'
+
+    Department:
+      type: object
+      required:
+        - id
+        - organization_id
+        - name
+        - code
+        - created_at
+      properties:
+        id:
+          type: string
+          format: uuid
+        organization_id:
+          type: string
+          format: uuid
+        name:
+          type: string
+          maxLength: 200
+        code:
+          type: string
+          maxLength: 50
+        description:
+          type: string
+          maxLength: 500
+        created_at:
+          type: string
+          format: date-time
+
+    DepartmentCreate:
+      type: object
+      required:
+        - name
+        - code
+      properties:
+        name:
+          type: string
+          maxLength: 200
+        code:
+          type: string
+          maxLength: 50
+        description:
+          type: string
+          maxLength: 500
+
+    Invoice:
+      type: object
+      required:
+        - id
+        - organization_id
+        - department_id
+        - invoice_number
+        - status
+        - total_amount
+        - amount_due
+        - created_at
+      properties:
+        id:
+          type: string
+          format: uuid
+        organization_id:
+          type: string
+          format: uuid
+        department_id:
+          type: string
+          format: uuid
+        invoice_number:
+          type: string
+          example: FAC-2024-00123
+        status:
+          type: string
+          enum:
+            - draft
+            - issued
+            - partially_paid
+            - paid
+            - overdue
+            - cancelled
+        issue_date:
+          type: string
+          format: date
+        due_date:
+          type: string
+          format: date
+        currency:
+          type: string
+          enum:
+            - EUR
+        subtotal_amount:
+          type: integer
+          description: Montant HT en centimes
+        vat_amount:
+          type: integer
+          description: Montant TVA en centimes
+        total_amount:
+          type: integer
+          description: Montant TTC en centimes
+        amount_paid:
+          type: integer
+          description: Montant payé en centimes
+        amount_due:
+          type: integer
+          description: Montant restant dû en centimes
+        payer:
+          $ref: '#/components/schemas/Payer'
+        line_items:
+          type: array
+          items:
+            $ref: '#/components/schemas/InvoiceLineItem'
+        created_at:
+          type: string
+          format: date-time
+        updated_at:
+          type: string
+          format: date-time
+        paid_at:
+          type: string
+          format: date-time
+
+    InvoiceCreate:
+      type: object
+      required:
+        - department_id
+        - payer
+        - line_items
+      properties:
+        department_id:
+          type: string
+          format: uuid
+        invoice_number:
+          type: string
+        issue_date:
+          type: string
+          format: date
+        due_date:
+          type: string
+          format: date
+        payer:
+          $ref: '#/components/schemas/Payer'
+        line_items:
+          type: array
+          minItems: 1
+          items:
+            $ref: '#/components/schemas/InvoiceLineItemCreate'
+        notes:
+          type: string
+          maxLength: 1000
+        payment_terms:
+          type: string
+          maxLength: 500
+
+    InvoiceLineItem:
+      type: object
+      required:
+        - description
+        - quantity
+        - unit_price
+        - vat_rate
+        - total_amount
+      properties:
+        description:
+          type: string
+          maxLength: 500
+        quantity:
+          type: number
+          format: float
+          minimum: 0.01
+        unit_price:
+          type: integer
+          description: Prix unitaire HT en centimes
+        vat_rate:
+          type: number
+          format: float
+          description: Taux de TVA (ex 20.0 pour 20 pourcent)
+        total_amount:
+          type: integer
+          description: Montant total TTC en centimes
+
+    InvoiceLineItemCreate:
+      type: object
+      required:
+        - description
+        - quantity
+        - unit_price
+        - vat_rate
+      properties:
+        description:
+          type: string
+          maxLength: 500
+        quantity:
+          type: number
+          format: float
+          minimum: 0.01
+        unit_price:
+          type: integer
+        vat_rate:
+          type: number
+          format: float
+
+    Payer:
+      type: object
+      required:
+        - name
+      properties:
+        name:
+          type: string
+          maxLength: 200
+        email:
+          type: string
+          format: email
+        phone:
+          type: string
+          maxLength: 20
+        address:
+          $ref: '#/components/schemas/Address'
+        siret:
+          type: string
+          pattern: '^\d{14}$'
+
+    PaymentLink:
+      type: object
+      required:
+        - id
+        - invoice_id
+        - amount
+        - currency
+        - status
+        - payment_page_url
+        - created_at
+      properties:
+        id:
+          type: string
+          format: uuid
+        invoice_id:
+          type: string
+          format: uuid
+        payment_intent_id:
+          type: string
+          format: uuid
+        amount:
+          type: integer
+          description: Montant en centimes
+        currency:
+          type: string
+          enum:
+            - EUR
+        payment_methods:
+          type: array
+          items:
+            type: string
+            enum:
+              - sepa_credit
+              - card
+              - sepa_debit
+        payment_page_url:
+          type: string
+          format: uri
+          example: https://pay.votreplateforme.fr/p/abc123xyz
+        qr_code_data:
+          type: string
+        status:
+          type: string
+          enum:
+            - active
+            - expired
+            - succeeded
+            - cancelled
+        expires_at:
+          type: string
+          format: date-time
+        return_url:
+          type: string
+          format: uri
+        created_at:
+          type: string
+          format: date-time
+        completed_at:
+          type: string
+          format: date-time
+
+    PaymentLinkCreate:
+      type: object
+      required:
+        - invoice_id
+        - payment_methods
+      properties:
+        invoice_id:
+          type: string
+          format: uuid
+        amount:
+          type: integer
+          description: Montant partiel en centimes (montant complet si non spécifié)
+        payment_methods:
+          type: array
+          minItems: 1
+          items:
+            type: string
+            enum:
+              - sepa_credit
+              - card
+              - sepa_debit
+        expires_at:
+          type: string
+          format: date-time
+        return_url:
+          type: string
+          format: uri
+
+    PaymentIntent:
+      type: object
+      required:
+        - id
+        - invoice_id
+        - payment_link_id
+        - amount
+        - currency
+        - status
+        - created_at
+      properties:
+        id:
+          type: string
+          format: uuid
+        invoice_id:
+          type: string
+          format: uuid
+        payment_link_id:
+          type: string
+          format: uuid
+        amount:
+          type: integer
+          description: Montant en centimes
+        currency:
+          type: string
+          enum:
+            - EUR
+        status:
+          type: string
+          enum:
+            - created
+            - pending
+            - processing
+            - succeeded
+            - failed
+            - cancelled
+            - refunded
+            - partially_refunded
+        selected_payment_method:
+          type: string
+          enum:
+            - sepa_credit
+            - card
+            - sepa_debit
+        aiia_transaction_id:
+          type: string
+          description: ID de transaction Aiia
+        aiia_status:
+          type: string
+          enum:
+            - initiated
+            - authorized
+            - settled
+            - rejected
+        failure_reason:
+          type: string
+        refunded_amount:
+          type: integer
+          default: 0
+        created_at:
+          type: string
+          format: date-time
+        updated_at:
+          type: string
+          format: date-time
+        completed_at:
+          type: string
+          format: date-time
+
+    Refund:
+      type: object
+      required:
+        - id
+        - payment_intent_id
+        - amount
+        - currency
+        - status
+        - created_at
+      properties:
+        id:
+          type: string
+          format: uuid
+        payment_intent_id:
+          type: string
+          format: uuid
+        invoice_id:
+          type: string
+          format: uuid
+        amount:
+          type: integer
+          description: Montant remboursé en centimes
+        currency:
+          type: string
+          enum:
+            - EUR
+        reason:
+          type: string
+          maxLength: 500
+        status:
+          type: string
+          enum:
+            - pending
+            - processing
+            - succeeded
+            - failed
+        aiia_refund_id:
+          type: string
+        failure_reason:
+          type: string
+        created_at:
+          type: string
+          format: date-time
+        updated_at:
+          type: string
+          format: date-time
+        completed_at:
+          type: string
+          format: date-time
+
+    RefundCreate:
+      type: object
+      required:
+        - payment_intent_id
+      properties:
+        payment_intent_id:
+          type: string
+          format: uuid
+        amount:
+          type: integer
+          description: Montant à rembourser en centimes (total si non spécifié)
+        reason:
+          type: string
+          maxLength: 500
+
+    Address:
+      type: object
+      required:
+        - line1
+        - postal_code
+        - city
+        - country
+      properties:
+        line1:
+          type: string
+          maxLength: 200
+        line2:
+          type: string
+          maxLength: 200
+        postal_code:
+          type: string
+          maxLength: 10
+        city:
+          type: string
+          maxLength: 100
+        country:
+          type: string
+          pattern: '^FR$'
+
+    Pagination:
+      type: object
+      required:
+        - page
+        - page_size
+        - total_items
+        - total_pages
+      properties:
+        page:
+          type: integer
+          minimum: 1
+        page_size:
+          type: integer
+          minimum: 1
+          maximum: 100
+        total_items:
+          type: integer
+        total_pages:
+          type: integer
+
+    Error:
+      type: object
+      required:
+        - error
+        - message
+      properties:
+        error:
+          type: string
+        message:
+          type: string
+        request_id:
+          type: string
+          format: uuid
+
+  responses:
+    BadRequest:
+      description: Requête invalide
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/Error'
+          example:
+            error: bad_request
+            message: Le montant doit être supérieur à 0
+    
+    Unauthorized:
+      description: Non autorisé
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/Error'
+          example:
+            error: unauthorized
+            message: Token invalide ou expiré
+    
+    NotFound:
+      description: Ressource non trouvée
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/Error'
+          example:
+            error: not_found
+            message: Ressource introuvable
+`;
+
+    const spec = jsyaml.load(yamlSpec);
+
+    window.onload = function() {
+      SwaggerUIBundle({
+        spec: spec,
+        dom_id: '#swagger-ui',
+        deepLinking: true,
+        presets: [
+          SwaggerUIBundle.presets.apis,
+          SwaggerUIStandalonePreset
+        ],
+        plugins: [
+          SwaggerUIBundle.plugins.DownloadUrl
+        ],
+        layout: "StandaloneLayout",
+        defaultModelsExpandDepth: 1,
+        defaultModelExpandDepth: 2,
+        docExpansion: "list",
+        filter: true,
+        showExtensions: true,
+        showCommonExtensions: true,
+        tryItOutEnabled: false,
+      });
+    };
+  </script>
+</body>
+</html>
+{% endraw %}

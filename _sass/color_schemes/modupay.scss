@@ -1,0 +1,44 @@
+// Modupay color scheme
+// Fichier: _sass/color_schemes/modupay.scss
+
+$link-color: #c0392b;
+$btn-primary-color: #c0392b;
+$body-heading-color: #1a1d24;
+$body-text-color: #4a5060;
+$body-background-color: #ffffff;
+$sidebar-color: #f8f9fb;
+$base-button-color: #c0392b;
+$nav-child-link-color: #c0392b;
+
+.site-nav .nav-list .nav-list-item .nav-list-link:hover,
+.site-nav .nav-list .nav-list-item .nav-list-link.active {
+  color: #c0392b;
+}
+
+.btn-primary {
+  background-color: #c0392b !important;
+  border-color: #c0392b !important;
+  &:hover {
+    background-color: #a93226 !important;
+  }
+}
+
+.label-red {
+  background-color: #fde8e8;
+  color: #c0392b;
+}
+
+// En-tête avec couleurs Modupay
+.site-header {
+  border-bottom: 3px solid #c0392b;
+}
+
+.site-title {
+  color: #1a1d24 !important;
+  font-weight: 700;
+  &::after {
+    content: " — API";
+    color: #c0392b;
+    font-weight: 400;
+  }
+}
