@@ -79,7 +79,7 @@ nav_order: 6
 ### Créer une facture
 
 ```bash
-curl -X POST https://api.votreplateforme.fr/v1/invoices \
+curl -X POST https://api.modupay.fr/v1/invoices \
   -H "Authorization: Bearer {token}" \
   -H "X-Entity-Id: {organization_id}" \
   -H "Content-Type: application/json" \
@@ -104,7 +104,7 @@ curl -X POST https://api.votreplateforme.fr/v1/invoices \
 ### Générer un lien de paiement
 
 ```bash
-curl -X POST https://api.votreplateforme.fr/v1/payment_links \
+curl -X POST https://api.modupay.fr/v1/payment_links \
   -H "Authorization: Bearer {token}" \
   -H "X-Entity-Id: {organization_id}" \
   -H "Content-Type: application/json" \
@@ -119,7 +119,7 @@ curl -X POST https://api.votreplateforme.fr/v1/payment_links \
 ### Créer un remboursement
 
 ```bash
-curl -X POST https://api.votreplateforme.fr/v1/refunds \
+curl -X POST https://api.modupay.fr/v1/refunds \
   -H "Authorization: Bearer {token}" \
   -H "X-Entity-Id: {organization_id}" \
   -H "Content-Type: application/json" \
