@@ -19,7 +19,7 @@ nav_order: 7
 <a href="/modupay-docs/portal/index.html" class="btn btn-primary fs-5 mb-4">Choisir un thème →</a>
 
 <a href="/modupay-docs/portal/light.html" class="btn btn-primary fs-5 mb-4">☀️ Mode clair</a>
-<a href="/modupay-docs/portal/dark.html" class="btn fs-5 mb-2">🌙 Mode sombre</a>
+<a href="/modupay-docs/portal/dark.html" class="btn btn-primary fs-5 mb-4">🌙 Mode sombre</a>
 
 ---
 
