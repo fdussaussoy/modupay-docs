@@ -3,7 +3,7 @@ info:
   title: API de Paiement - Plateforme Marque Blanche
   version: 1.0.0
   description: |
-    # API de gestion de paiement de facture pour le marché français
+    # API de gestion de paiements pour le marché français
     
     Cette API permet aux intégrateurs de gérer en marque blanche des organisations,
     factures, paiements et remboursements avec intégration Aiia pour virements SEPA.
@@ -34,6 +34,8 @@ tags:
   - name: Organizations
     description: Gestion des organisations
   - name: Departments
+  - name: Bank Accounts
+    description: Gestion des comptes bancaires (IBAN) associés aux régies. Chaque régie peut avoir plusieurs comptes bancaires dont un compte par défaut pour la réception des paiements.
     description: Gestion des régies/services
   - name: Invoices
     description: Gestion des factures
@@ -530,6 +532,218 @@ paths:
               schema:
                 $ref: '#/components/schemas/Refund'
 
+  /departments/{dept_id}/bank_accounts:
+    parameters:
+      - name: dept_id
+        in: path
+        required: true
+        description: Identifiant unique de la régie
+        schema:
+          type: string
+          format: uuid
+      - name: X-Entity-Id
+        in: header
+        required: true
+        description: Identifiant de l'organisation
+        schema:
+          type: string
+          format: uuid
+
+    get:
+      tags:
+        - Bank Accounts
+      summary: Lister les comptes bancaires d'une régie
+      operationId: listBankAccounts
+      security:
+        - BearerAuth: []
+      responses:
+        '200':
+          description: Liste des comptes bancaires
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  data:
+                    type: array
+                    items:
+                      $ref: '#/components/schemas/BankAccount'
+                  total:
+                    type: integer
+              example:
+                data:
+                  - id: "ba-uuid-001"
+                    department_id: "dept-uuid-001"
+                    iban: "FR76 3000 6000 0112 3456 7890 189"
+                    bic: "BNPAFRPPXXX"
+                    holder_name: "Régie Eau Mairie de Lyon"
+                    label: "Compte principal"
+                    is_default: true
+                    status: "active"
+                    created_at: "2026-01-15T10:00:00Z"
+                  - id: "ba-uuid-002"
+                    department_id: "dept-uuid-001"
+                    iban: "FR76 3000 6000 0198 7654 3210 189"
+                    bic: "BNPAFRPPXXX"
+                    holder_name: "Régie Eau Mairie de Lyon"
+                    label: "Compte secondaire"
+                    is_default: false
+                    status: "active"
+                    created_at: "2026-02-01T09:00:00Z"
+                total: 2
+        '403':
+          description: Accès non autorisé
+        '404':
+          description: Régie introuvable
+
+    post:
+      tags:
+        - Bank Accounts
+      summary: Ajouter un compte bancaire à une régie
+      operationId: createBankAccount
+      security:
+        - BearerAuth: []
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/BankAccountCreate'
+            example:
+              iban: "FR76 3000 6000 0112 3456 7890 189"
+              bic: "BNPAFRPPXXX"
+              holder_name: "Régie Eau Mairie de Lyon"
+              label: "Compte principal"
+              is_default: true
+      responses:
+        '201':
+          description: Compte bancaire créé
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/BankAccount'
+        '400':
+          description: IBAN invalide ou données manquantes
+        '409':
+          description: Ce compte bancaire existe déjà pour cette régie
+
+  /departments/{dept_id}/bank_accounts/{bank_account_id}:
+    parameters:
+      - name: dept_id
+        in: path
+        required: true
+        schema:
+          type: string
+          format: uuid
+      - name: bank_account_id
+        in: path
+        required: true
+        description: Identifiant unique du compte bancaire
+        schema:
+          type: string
+          format: uuid
+      - name: X-Entity-Id
+        in: header
+        required: true
+        schema:
+          type: string
+          format: uuid
+
+    get:
+      tags:
+        - Bank Accounts
+      summary: Récupérer un compte bancaire
+      operationId: getBankAccount
+      security:
+        - BearerAuth: []
+      responses:
+        '200':
+          description: Détails du compte bancaire
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/BankAccount'
+        '404':
+          description: Compte bancaire introuvable
+
+    patch:
+      tags:
+        - Bank Accounts
+      summary: Modifier un compte bancaire
+      operationId: updateBankAccount
+      security:
+        - BearerAuth: []
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/BankAccountUpdate'
+            example:
+              label: "Compte principal renommé"
+              is_default: true
+      responses:
+        '200':
+          description: Compte bancaire mis à jour
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/BankAccount'
+        '404':
+          description: Compte bancaire introuvable
+
+    delete:
+      tags:
+        - Bank Accounts
+      summary: Supprimer un compte bancaire
+      operationId: deleteBankAccount
+      security:
+        - BearerAuth: []
+      responses:
+        '204':
+          description: Compte bancaire supprimé
+        '409':
+          description: Impossible de supprimer le compte par défaut ou un compte lié à des paiements en cours
+
+  /departments/{dept_id}/bank_accounts/{bank_account_id}/set_default:
+    parameters:
+      - name: dept_id
+        in: path
+        required: true
+        schema:
+          type: string
+          format: uuid
+      - name: bank_account_id
+        in: path
+        required: true
+        schema:
+          type: string
+          format: uuid
+      - name: X-Entity-Id
+        in: header
+        required: true
+        schema:
+          type: string
+          format: uuid
+
+    post:
+      tags:
+        - Bank Accounts
+      summary: Définir comme compte par défaut
+      operationId: setDefaultBankAccount
+      description: Définit ce compte comme compte par défaut pour la régie. L'ancien compte par défaut est automatiquement désactivé.
+      security:
+        - BearerAuth: []
+      responses:
+        '200':
+          description: Compte défini par défaut
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/BankAccount'
+        '404':
+          description: Compte bancaire introuvable
+
 components:
   securitySchemes:
     BearerAuth:
@@ -656,6 +870,115 @@ components:
         description:
           type: string
           maxLength: 500
+
+    BankAccount:
+      type: object
+      required:
+        - id
+        - department_id
+        - iban
+        - bic
+        - holder_name
+        - is_default
+        - status
+        - created_at
+      properties:
+        id:
+          type: string
+          format: uuid
+          description: Identifiant unique du compte bancaire
+        department_id:
+          type: string
+          format: uuid
+          description: Régie associée
+        iban:
+          type: string
+          description: IBAN masqué (seuls les 4 derniers chiffres sont visibles en lecture)
+          example: "FR76 **** **** **** **** **** 189"
+        bic:
+          type: string
+          description: Code BIC/SWIFT de la banque
+          example: "BNPAFRPPXXX"
+        holder_name:
+          type: string
+          maxLength: 200
+          description: Nom du titulaire du compte
+          example: "Régie Eau Mairie de Lyon"
+        label:
+          type: string
+          maxLength: 100
+          description: Libellé interne pour identifier le compte
+          example: "Compte principal"
+        is_default:
+          type: boolean
+          description: Indique si ce compte est le compte par défaut de la régie
+        status:
+          type: string
+          enum:
+            - active
+            - inactive
+            - pending_verification
+          description: |
+            - `active` : compte vérifié et opérationnel
+            - `inactive` : compte désactivé
+            - `pending_verification` : en attente de vérification bancaire
+        verification_date:
+          type: string
+          format: date-time
+          description: Date de vérification du compte
+          nullable: true
+        created_at:
+          type: string
+          format: date-time
+        updated_at:
+          type: string
+          format: date-time
+          nullable: true
+
+    BankAccountCreate:
+      type: object
+      required:
+        - iban
+        - bic
+        - holder_name
+      properties:
+        iban:
+          type: string
+          description: IBAN complet (espaces autorisés, normalisé automatiquement)
+          example: "FR76 3000 6000 0112 3456 7890 189"
+        bic:
+          type: string
+          description: Code BIC/SWIFT
+          example: "BNPAFRPPXXX"
+        holder_name:
+          type: string
+          maxLength: 200
+          description: Nom du titulaire du compte
+        label:
+          type: string
+          maxLength: 100
+          description: Libellé interne
+        is_default:
+          type: boolean
+          default: false
+          description: Définir comme compte par défaut dès la création
+
+    BankAccountUpdate:
+      type: object
+      properties:
+        holder_name:
+          type: string
+          maxLength: 200
+        label:
+          type: string
+          maxLength: 100
+        is_default:
+          type: boolean
+        status:
+          type: string
+          enum:
+            - active
+            - inactive
 
     Invoice:
       type: object
