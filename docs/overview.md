@@ -87,23 +87,21 @@ CREATED → PENDING → PROCESSING → SUCCEEDED → REFUNDED
 
 ## Roadmap
 
-### v1.0 — Février 2026 ✅
+### v1.0 — Q1 2026 ✅
 - API REST complète (60+ endpoints)
-- Portail utilisateur Next.js
 - Multi-tenant RLS
 - Intégration Aiia (SEPA Open Banking)
 
 ### v1.1 — Q2 2026 🔜
-- Prélèvements SEPA automatiques
-- Factures récurrentes
-- Export comptable FEC
+- Envoi ticket de paiement
+- Portail utilisateur Next.js
+- Gestion des remboursements
 
 ### v1.2 — Q3 2026 📅
-- Multi-devises (CHF, GBP)
-- Workflows d'approbation
-- API GraphQL
+- Intégration Payfip
+- Connecteurs outil facture
+- plugins CMS
 
 ### v2.0 — 2027 📅
-- IA détection fraude
-- Paiements instantanés SEPA
+- IA
 - Open Banking étendu
