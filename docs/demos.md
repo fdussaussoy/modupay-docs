@@ -20,8 +20,8 @@ nav_order: 7
 <br>
 <a href="/modupay-docs/portal/index.html" class="btn btn-primary fs-5 mb-4" target="_blank">Choisir un thème →</a>
 
-<a href="/modupay-docs/portal/light.html" class="btn btn-primary fs-5 mb-4" target="_blank">☀️ Mode clair</a>
-<a href="/modupay-docs/portal/dark.html" class="btn btn-primary fs-5 mb-4" target="_blank">🌙 Mode sombre</a>
+<a href="https://haryalt.eu/modupay/assets/light.html" class="btn btn-primary fs-5 mb-4" target="_blank">☀️ Mode clair</a>
+<a href="https://haryalt.eu/modupay/assets/dark.html" class="btn btn-primary fs-5 mb-4" target="_blank">🌙 Mode sombre</a>
 
 ---
 
