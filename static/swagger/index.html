@@ -103,7 +103,7 @@ info:
   title: API de Paiement - Plateforme Marque Blanche
   version: 1.0.0
   description: |
-    # API de gestion de paiements pour le marché français
+    # API de gestion de paiement de factures pour le marché français
     
     Cette API permet aux intégrateurs de gérer en marque blanche des organisations,
     factures, paiements et remboursements avec intégration Aiia pour virements SEPA.
@@ -117,12 +117,12 @@ info:
     Tous les événements majeurs déclenchent des webhooks avec signature HMAC-SHA256.
   contact:
     name: Support API
-    email: api-support@votreplateforme.fr
+    email: api-support@modupay.fr
 
 servers:
-  - url: https://api.sandbox.votreplateforme.fr/v1
+  - url: https://api.sandbox.modupay.fr/v1
     description: Sandbox
-  - url: https://api.votreplateforme.fr/v1
+  - url: https://api.modupay.fr/v1
     description: Production
 
 security:
@@ -969,7 +969,7 @@ components:
         payment_page_url:
           type: string
           format: uri
-          example: https://pay.votreplateforme.fr/p/abc123xyz
+          example: https://pay.modupay.fr/p/abc123xyz
         qr_code_data:
           type: string
         status:
