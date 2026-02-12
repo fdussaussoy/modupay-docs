@@ -17,7 +17,7 @@ API de paiement de factures B2C en marque blanche pour le marché français. Gé
 
 ## Présentation
 
-**Modupay** est une API REST pensée pour le marché français, permettant aux intégrateurs de proposer en marque blanche une solution complète de facturation et de paiement.
+**Modupay** est une API REST pensée pour le marché français, permettant aux intégrateurs de proposer en marque blanche une solution complète de paiement de factures.
 
 ### Fonctionnalités principales
 
@@ -49,8 +49,8 @@ Sécurité : JWT RS256 · AES-256 · TLS 1.3
 
 | Environnement | URL de base |
 |:---|:---|
-| **Sandbox** | `https://api.sandbox.votreplateforme.fr/v1` |
-| **Production** | `https://api.votreplateforme.fr/v1` |
+| **Sandbox** | `https://api.sandbox.modupay.fr/v1` |
+| **Production** | `https://api.modupay.fr/v1` |
 
 ---
 
