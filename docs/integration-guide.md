@@ -163,6 +163,21 @@ curl -X POST https://api.sandbox.modupay.fr/v1/departments/{dept_id}/bank_accoun
   }'
 ```
 
+### 6. Valider le KYC de l'organisation
+
+```bash
+curl -X POST https://api.sandbox.modupay.fr/v1/departments/{dept_id}/kyc \
+  -H "Authorization: Bearer $TOKEN" \
+  -H "Content-Type: application/json" \
+  -d '{
+    "iban": "FR7612345678901234567890123",
+    "bic": "BNPAFRPPXXX",
+    "account_name": "Compte Régie Eau",
+    "bank_name": "BNP Paribas",
+    "is_default": true
+  }'
+```
+
 ---
 
 ## Flux de paiement complet
