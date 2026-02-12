@@ -5,76 +5,29 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Modupay — API Reference</title>
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/swagger-ui/5.11.0/swagger-ui.min.css">
+  <link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600&family=Syne:wght@700;800&display=swap" rel="stylesheet">
   <style>
     * { box-sizing: border-box; }
     body { margin: 0; font-family: sans-serif; background: #f8f9fb; }
-
-    .topbar-custom {
-      background: #c0392b;
-      padding: 14px 24px;
-      display: flex;
-      align-items: center;
-      justify-content: space-between;
-      box-shadow: 0 2px 8px rgba(0,0,0,.15);
-    }
-
-    .topbar-logo {
-      display: flex;
-      align-items: center;
-      gap: 12px;
-      text-decoration: none;
-    }
-
-    .topbar-logo svg { display: block; }
-
+    .topbar-custom { background: #c0392b; padding: 14px 24px; display: flex; align-items: center; justify-content: space-between; box-shadow: 0 2px 8px rgba(0,0,0,.15); }
+    .topbar-logo { display: flex; align-items: center; gap: 12px; text-decoration: none; }
     .topbar-links { display: flex; gap: 16px; }
-    .topbar-links a {
-      color: rgba(255,255,255,.8);
-      text-decoration: none;
-      font-size: 13px;
-      font-family: 'DM Sans', sans-serif;
-      padding: 6px 12px;
-      border-radius: 6px;
-      border: 1px solid rgba(255,255,255,.25);
-      transition: all .15s;
-    }
+    .topbar-links a { color: rgba(255,255,255,.8); text-decoration: none; font-size: 13px; font-family: 'DM Sans', sans-serif; padding: 6px 12px; border-radius: 6px; border: 1px solid rgba(255,255,255,.25); transition: all .15s; }
     .topbar-links a:hover { background: rgba(255,255,255,.15); color: white; }
-
     .swagger-ui .topbar { display: none; }
-
     .swagger-ui .info { margin: 32px 0 24px; }
     .swagger-ui .info .title { color: #1a1d24; }
-
-    .swagger-ui .btn.authorize {
-      background: #c0392b !important;
-      border-color: #c0392b !important;
-      color: white !important;
-    }
-
+    .swagger-ui .btn.authorize { background: #c0392b !important; border-color: #c0392b !important; color: white !important; }
     .swagger-ui .opblock.opblock-post .opblock-summary-method { background: #c0392b; }
     .swagger-ui .opblock.opblock-get .opblock-summary-method { background: #2980b9; }
     .swagger-ui .opblock.opblock-delete .opblock-summary-method { background: #e74c3c; }
     .swagger-ui .opblock.opblock-patch .opblock-summary-method { background: #e67e22; }
-
-    .swagger-ui .opblock-tag { border-bottom: 1px solid #e4e7ee; }
     .swagger-ui .opblock-tag:hover { background: #fdf2f1; }
-
     #swagger-ui { max-width: 1200px; margin: 0 auto; padding: 0 24px 60px; }
-
-    .env-badge {
-      background: rgba(255,255,255,.2);
-      color: white;
-      font-size: 11px;
-      font-weight: 600;
-      padding: 3px 10px;
-      border-radius: 20px;
-      letter-spacing: .5px;
-    }
+    .env-badge { background: rgba(255,255,255,.2); color: white; font-size: 11px; font-weight: 600; padding: 3px 10px; border-radius: 20px; letter-spacing: .5px; }
   </style>
-  <link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600&family=Syne:wght@700;800&display=swap" rel="stylesheet">
 </head>
 <body>
-
   <div class="topbar-custom">
     <a class="topbar-logo" href="/modupay-docs/">
       <svg viewBox="0 0 140 34" width="120" height="29" xmlns="http://www.w3.org/2000/svg">
@@ -90,20 +43,17 @@
       <a href="/modupay-docs/portal/light.html">Portail</a>
     </div>
   </div>
-
   <div id="swagger-ui"></div>
-
   <script src="https://cdnjs.cloudflare.com/ajax/libs/swagger-ui/5.11.0/swagger-ui-bundle.min.js"></script>
   <script src="https://cdnjs.cloudflare.com/ajax/libs/swagger-ui/5.11.0/swagger-ui-standalone-preset.min.js"></script>
   <script src="https://cdnjs.cloudflare.com/ajax/libs/js-yaml/4.1.0/js-yaml.min.js"></script>
-
   <script>
     const yamlSpec = `openapi: 3.0.3
 info:
   title: API de Paiement - Plateforme Marque Blanche
   version: 1.0.0
   description: |
-    # API de gestion de paiement de factures pour le marché français
+    # API de gestion de paiements pour le marché français
     
     Cette API permet aux intégrateurs de gérer en marque blanche des organisations,
     factures, paiements et remboursements avec intégration Aiia pour virements SEPA.
@@ -117,12 +67,12 @@ info:
     Tous les événements majeurs déclenchent des webhooks avec signature HMAC-SHA256.
   contact:
     name: Support API
-    email: api-support@modupay.fr
+    email: api-support@votreplateforme.fr
 
 servers:
-  - url: https://api.sandbox.modupay.fr/v1
+  - url: https://api.sandbox.votreplateforme.fr/v1
     description: Sandbox
-  - url: https://api.modupay.fr/v1
+  - url: https://api.votreplateforme.fr/v1
     description: Production
 
 security:
@@ -134,6 +84,8 @@ tags:
   - name: Organizations
     description: Gestion des organisations
   - name: Departments
+  - name: Bank Accounts
+    description: Gestion des comptes bancaires (IBAN) associés aux régies. Chaque régie peut avoir plusieurs comptes bancaires dont un compte par défaut pour la réception des paiements.
     description: Gestion des régies/services
   - name: Invoices
     description: Gestion des factures
@@ -630,6 +582,218 @@ paths:
               schema:
                 $ref: '#/components/schemas/Refund'
 
+  /departments/{dept_id}/bank_accounts:
+    parameters:
+      - name: dept_id
+        in: path
+        required: true
+        description: Identifiant unique de la régie
+        schema:
+          type: string
+          format: uuid
+      - name: X-Entity-Id
+        in: header
+        required: true
+        description: Identifiant de l'organisation
+        schema:
+          type: string
+          format: uuid
+
+    get:
+      tags:
+        - Bank Accounts
+      summary: Lister les comptes bancaires d'une régie
+      operationId: listBankAccounts
+      security:
+        - BearerAuth: []
+      responses:
+        '200':
+          description: Liste des comptes bancaires
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  data:
+                    type: array
+                    items:
+                      $ref: '#/components/schemas/BankAccount'
+                  total:
+                    type: integer
+              example:
+                data:
+                  - id: "ba-uuid-001"
+                    department_id: "dept-uuid-001"
+                    iban: "FR76 3000 6000 0112 3456 7890 189"
+                    bic: "BNPAFRPPXXX"
+                    holder_name: "Régie Eau Mairie de Lyon"
+                    label: "Compte principal"
+                    is_default: true
+                    status: "active"
+                    created_at: "2026-01-15T10:00:00Z"
+                  - id: "ba-uuid-002"
+                    department_id: "dept-uuid-001"
+                    iban: "FR76 3000 6000 0198 7654 3210 189"
+                    bic: "BNPAFRPPXXX"
+                    holder_name: "Régie Eau Mairie de Lyon"
+                    label: "Compte secondaire"
+                    is_default: false
+                    status: "active"
+                    created_at: "2026-02-01T09:00:00Z"
+                total: 2
+        '403':
+          description: Accès non autorisé
+        '404':
+          description: Régie introuvable
+
+    post:
+      tags:
+        - Bank Accounts
+      summary: Ajouter un compte bancaire à une régie
+      operationId: createBankAccount
+      security:
+        - BearerAuth: []
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/BankAccountCreate'
+            example:
+              iban: "FR76 3000 6000 0112 3456 7890 189"
+              bic: "BNPAFRPPXXX"
+              holder_name: "Régie Eau Mairie de Lyon"
+              label: "Compte principal"
+              is_default: true
+      responses:
+        '201':
+          description: Compte bancaire créé
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/BankAccount'
+        '400':
+          description: IBAN invalide ou données manquantes
+        '409':
+          description: Ce compte bancaire existe déjà pour cette régie
+
+  /departments/{dept_id}/bank_accounts/{bank_account_id}:
+    parameters:
+      - name: dept_id
+        in: path
+        required: true
+        schema:
+          type: string
+          format: uuid
+      - name: bank_account_id
+        in: path
+        required: true
+        description: Identifiant unique du compte bancaire
+        schema:
+          type: string
+          format: uuid
+      - name: X-Entity-Id
+        in: header
+        required: true
+        schema:
+          type: string
+          format: uuid
+
+    get:
+      tags:
+        - Bank Accounts
+      summary: Récupérer un compte bancaire
+      operationId: getBankAccount
+      security:
+        - BearerAuth: []
+      responses:
+        '200':
+          description: Détails du compte bancaire
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/BankAccount'
+        '404':
+          description: Compte bancaire introuvable
+
+    patch:
+      tags:
+        - Bank Accounts
+      summary: Modifier un compte bancaire
+      operationId: updateBankAccount
+      security:
+        - BearerAuth: []
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/BankAccountUpdate'
+            example:
+              label: "Compte principal renommé"
+              is_default: true
+      responses:
+        '200':
+          description: Compte bancaire mis à jour
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/BankAccount'
+        '404':
+          description: Compte bancaire introuvable
+
+    delete:
+      tags:
+        - Bank Accounts
+      summary: Supprimer un compte bancaire
+      operationId: deleteBankAccount
+      security:
+        - BearerAuth: []
+      responses:
+        '204':
+          description: Compte bancaire supprimé
+        '409':
+          description: Impossible de supprimer le compte par défaut ou un compte lié à des paiements en cours
+
+  /departments/{dept_id}/bank_accounts/{bank_account_id}/set_default:
+    parameters:
+      - name: dept_id
+        in: path
+        required: true
+        schema:
+          type: string
+          format: uuid
+      - name: bank_account_id
+        in: path
+        required: true
+        schema:
+          type: string
+          format: uuid
+      - name: X-Entity-Id
+        in: header
+        required: true
+        schema:
+          type: string
+          format: uuid
+
+    post:
+      tags:
+        - Bank Accounts
+      summary: Définir comme compte par défaut
+      operationId: setDefaultBankAccount
+      description: Définit ce compte comme compte par défaut pour la régie. L'ancien compte par défaut est automatiquement désactivé.
+      security:
+        - BearerAuth: []
+      responses:
+        '200':
+          description: Compte défini par défaut
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/BankAccount'
+        '404':
+          description: Compte bancaire introuvable
+
 components:
   securitySchemes:
     BearerAuth:
@@ -664,13 +828,13 @@ components:
           maxLength: 200
         siret:
           type: string
-          pattern: '^\d{14}$'
+          pattern: '^\\d{14}$'
         siren:
           type: string
-          pattern: '^\d{9}$'
+          pattern: '^\\d{9}$'
         vat_number:
           type: string
-          pattern: '^FR\d{11}$'
+          pattern: '^FR\\d{11}$'
         address:
           $ref: '#/components/schemas/Address'
         status:
@@ -706,10 +870,10 @@ components:
           maxLength: 200
         siret:
           type: string
-          pattern: '^\d{14}$'
+          pattern: '^\\d{14}$'
         vat_number:
           type: string
-          pattern: '^FR\d{11}$'
+          pattern: '^FR\\d{11}$'
         address:
           $ref: '#/components/schemas/Address'
 
@@ -756,6 +920,115 @@ components:
         description:
           type: string
           maxLength: 500
+
+    BankAccount:
+      type: object
+      required:
+        - id
+        - department_id
+        - iban
+        - bic
+        - holder_name
+        - is_default
+        - status
+        - created_at
+      properties:
+        id:
+          type: string
+          format: uuid
+          description: Identifiant unique du compte bancaire
+        department_id:
+          type: string
+          format: uuid
+          description: Régie associée
+        iban:
+          type: string
+          description: IBAN masqué (seuls les 4 derniers chiffres sont visibles en lecture)
+          example: "FR76 **** **** **** **** **** 189"
+        bic:
+          type: string
+          description: Code BIC/SWIFT de la banque
+          example: "BNPAFRPPXXX"
+        holder_name:
+          type: string
+          maxLength: 200
+          description: Nom du titulaire du compte
+          example: "Régie Eau Mairie de Lyon"
+        label:
+          type: string
+          maxLength: 100
+          description: Libellé interne pour identifier le compte
+          example: "Compte principal"
+        is_default:
+          type: boolean
+          description: Indique si ce compte est le compte par défaut de la régie
+        status:
+          type: string
+          enum:
+            - active
+            - inactive
+            - pending_verification
+          description: |
+            - \`active\` : compte vérifié et opérationnel
+            - \`inactive\` : compte désactivé
+            - \`pending_verification\` : en attente de vérification bancaire
+        verification_date:
+          type: string
+          format: date-time
+          description: Date de vérification du compte
+          nullable: true
+        created_at:
+          type: string
+          format: date-time
+        updated_at:
+          type: string
+          format: date-time
+          nullable: true
+
+    BankAccountCreate:
+      type: object
+      required:
+        - iban
+        - bic
+        - holder_name
+      properties:
+        iban:
+          type: string
+          description: IBAN complet (espaces autorisés, normalisé automatiquement)
+          example: "FR76 3000 6000 0112 3456 7890 189"
+        bic:
+          type: string
+          description: Code BIC/SWIFT
+          example: "BNPAFRPPXXX"
+        holder_name:
+          type: string
+          maxLength: 200
+          description: Nom du titulaire du compte
+        label:
+          type: string
+          maxLength: 100
+          description: Libellé interne
+        is_default:
+          type: boolean
+          default: false
+          description: Définir comme compte par défaut dès la création
+
+    BankAccountUpdate:
+      type: object
+      properties:
+        holder_name:
+          type: string
+          maxLength: 200
+        label:
+          type: string
+          maxLength: 100
+        is_default:
+          type: boolean
+        status:
+          type: string
+          enum:
+            - active
+            - inactive
 
     Invoice:
       type: object
@@ -929,7 +1202,7 @@ components:
           $ref: '#/components/schemas/Address'
         siret:
           type: string
-          pattern: '^\d{14}$'
+          pattern: '^\\d{14}$'
 
     PaymentLink:
       type: object
@@ -969,7 +1242,7 @@ components:
         payment_page_url:
           type: string
           format: uri
-          example: https://pay.modupay.fr/p/abc123xyz
+          example: https://pay.votreplateforme.fr/p/abc123xyz
         qr_code_data:
           type: string
         status:
@@ -1243,28 +1516,19 @@ components:
             error: not_found
             message: Ressource introuvable
 `;
-
     const spec = jsyaml.load(yamlSpec);
-
     window.onload = function() {
       SwaggerUIBundle({
         spec: spec,
         dom_id: '#swagger-ui',
         deepLinking: true,
-        presets: [
-          SwaggerUIBundle.presets.apis,
-          SwaggerUIStandalonePreset
-        ],
-        plugins: [
-          SwaggerUIBundle.plugins.DownloadUrl
-        ],
+        presets: [SwaggerUIBundle.presets.apis, SwaggerUIStandalonePreset],
+        plugins: [SwaggerUIBundle.plugins.DownloadUrl],
         layout: "StandaloneLayout",
         defaultModelsExpandDepth: 1,
         defaultModelExpandDepth: 2,
         docExpansion: "list",
         filter: true,
-        showExtensions: true,
-        showCommonExtensions: true,
         tryItOutEnabled: false,
       });
     };
