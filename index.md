@@ -7,11 +7,11 @@ nav_order: 1
 # Modupay — Documentation API v1.0
 {: .fs-9 }
 
-API de paiement en marque blanche pour le marché français. Gérez vos organisations, factures et paiements via une seule API REST.
+API de paiement de factures B2C en marque blanche pour le marché français. Gérez vos organisations, factures et paiements via une seule API REST.
 {: .fs-6 .fw-300 }
 
+[Vue d'ensemble]({{ site.baseurl }}/docs/overview){: .btn .btn-primary .fs-5 .mb-4 .mb-md-0 .mr-2 }
 [Démarrage rapide]({{ site.baseurl }}/docs/integration-guide){: .btn .btn-primary .fs-5 .mb-4 .mb-md-0 .mr-2 }
-[Voir sur GitHub](https://github.com/VOTRE_USERNAME/modupay-docs){: .btn .fs-5 .mb-4 .mb-md-0 }
 
 ---
 
