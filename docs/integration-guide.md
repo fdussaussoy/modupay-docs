@@ -95,7 +95,7 @@ Contactez notre équipe pour obtenir :
 ### 2. Authentification
 
 ```bash
-curl -X POST https://api.sandbox.votreplateforme.fr/v1/auth/token \
+curl -X POST https://api.sandbox.modupay.fr/v1/auth/token \
   -H "Content-Type: application/json" \
   -d '{
     "grant_type": "client_credentials",
@@ -118,7 +118,7 @@ Réponse :
 ### 3. Créer votre première organisation
 
 ```bash
-curl -X POST https://api.sandbox.votreplateforme.fr/v1/organizations \
+curl -X POST https://api.sandbox.modupay.fr/v1/organizations \
   -H "Authorization: Bearer $TOKEN" \
   -H "Content-Type: application/json" \
   -d '{
@@ -138,7 +138,7 @@ curl -X POST https://api.sandbox.votreplateforme.fr/v1/organizations \
 ### 4. Créer une régie/service
 
 ```bash
-curl -X POST https://api.sandbox.votreplateforme.fr/v1/organizations/{org_id}/departments \
+curl -X POST https://api.sandbox.modupay.fr/v1/organizations/{org_id}/departments \
   -H "Authorization: Bearer $TOKEN" \
   -H "Content-Type: application/json" \
   -d '{
@@ -151,7 +151,7 @@ curl -X POST https://api.sandbox.votreplateforme.fr/v1/organizations/{org_id}/de
 ### 5. Ajouter un compte bancaire
 
 ```bash
-curl -X POST https://api.sandbox.votreplateforme.fr/v1/departments/{dept_id}/bank_accounts \
+curl -X POST https://api.sandbox.modupay.fr/v1/departments/{dept_id}/bank_accounts \
   -H "Authorization: Bearer $TOKEN" \
   -H "Content-Type: application/json" \
   -d '{
@@ -170,7 +170,7 @@ curl -X POST https://api.sandbox.votreplateforme.fr/v1/departments/{dept_id}/ban
 ### Étape 1 : Créer une facture
 
 ```bash
-curl -X POST https://api.sandbox.votreplateforme.fr/v1/invoices \
+curl -X POST https://api.sandbox.modupay.fr/v1/invoices \
   -H "Authorization: Bearer $TOKEN" \
   -H "X-Entity-Id: $ORG_ID" \
   -H "Content-Type: application/json" \
@@ -214,7 +214,7 @@ Réponse :
 ### Étape 2 : Émettre la facture
 
 ```bash
-curl -X POST https://api.sandbox.votreplateforme.fr/v1/invoices/{invoice_id}/issue \
+curl -X POST https://api.sandbox.modupay.fr/v1/invoices/{invoice_id}/issue \
   -H "Authorization: Bearer $TOKEN" \
   -H "X-Entity-Id: $ORG_ID"
 ```
@@ -224,7 +224,7 @@ La facture passe en statut `issued`.
 ### Étape 3 : Créer un lien de paiement
 
 ```bash
-curl -X POST https://api.sandbox.votreplateforme.fr/v1/payment_links \
+curl -X POST https://api.sandbox.modupay.fr/v1/payment_links \
   -H "Authorization: Bearer $TOKEN" \
   -H "X-Entity-Id: $ORG_ID" \
   -H "Content-Type: application/json" \
@@ -245,8 +245,8 @@ Réponse :
   "amount": 42220,
   "currency": "EUR",
   "status": "active",
-  "payment_page_url": "https://pay.votreplateforme.fr/p/abc123xyz456",
-  "qr_code_data": "https://pay.votreplateforme.fr/p/abc123xyz456",
+  "payment_page_url": "https://pay.modupay.fr/p/abc123xyz456",
+  "qr_code_data": "https://pay.modupay.fr/p/abc123xyz456",
   "expires_at": "2024-03-31T23:59:59Z",
   "created_at": "2024-02-01T10:30:00Z"
 }
@@ -375,7 +375,7 @@ Le champ `aiia_status` du PaymentIntent reflète l'état côté Aiia :
 ### Configuration
 
 ```bash
-curl -X POST https://api.sandbox.votreplateforme.fr/v1/webhook_subscriptions \
+curl -X POST https://api.sandbox.modupay.fr/v1/webhook_subscriptions \
   -H "Authorization: Bearer $TOKEN" \
   -H "Content-Type: application/json" \
   -d '{
@@ -490,7 +490,7 @@ app.post('/webhooks/payment-api', express.raw({type: 'application/json'}), (req,
 ### Remboursement total
 
 ```bash
-curl -X POST https://api.sandbox.votreplateforme.fr/v1/refunds \
+curl -X POST https://api.sandbox.modupay.fr/v1/refunds \
   -H "Authorization: Bearer $TOKEN" \
   -H "X-Entity-Id: $ORG_ID" \
   -H "Content-Type: application/json" \
@@ -505,7 +505,7 @@ Si `amount` n'est pas spécifié, c'est un remboursement total.
 ### Remboursement partiel
 
 ```bash
-curl -X POST https://api.sandbox.votreplateforme.fr/v1/refunds \
+curl -X POST https://api.sandbox.modupay.fr/v1/refunds \
   -H "Authorization: Bearer $TOKEN" \
   -H "X-Entity-Id: $ORG_ID" \
   -H "Content-Type: application/json" \
@@ -527,7 +527,7 @@ somme(remboursements) <= montant_paiement_initial
 
 ```bash
 # Lister tous les remboursements d'un paiement
-curl -X GET https://api.sandbox.votreplateforme.fr/v1/payment_intents/{payment_intent_id}/refunds \
+curl -X GET https://api.sandbox.modupay.fr/v1/payment_intents/{payment_intent_id}/refunds \
   -H "Authorization: Bearer $TOKEN" \
   -H "X-Entity-Id: $ORG_ID"
 ```
@@ -571,7 +571,7 @@ Après remboursement :
 ### Consultation des logs
 
 ```bash
-curl -X GET "https://api.sandbox.votreplateforme.fr/v1/audit_logs?resource_type=invoice&from_date=2024-02-01T00:00:00Z" \
+curl -X GET "https://api.sandbox.modupay.fr/v1/audit_logs?resource_type=invoice&from_date=2024-02-01T00:00:00Z" \
   -H "Authorization: Bearer $TOKEN" \
   -H "X-Entity-Id: $ORG_ID"
 ```
@@ -653,7 +653,7 @@ Tous les événements suivants sont loggés :
 
 ### Sandbox
 
-**Base URL:** `https://api.sandbox.votreplateforme.fr/v1`
+**Base URL:** `https://api.sandbox.modupay.fr/v1`
 
 - Données de test uniquement
 - Paiements simulés (aucun argent réel)
@@ -669,7 +669,7 @@ FR7612345678901234567890125  (échec - compte bloqué)
 
 ### Production
 
-**Base URL:** `https://api.votreplateforme.fr/v1`
+**Base URL:** `https://api.modupay.fr/v1`
 
 - Données et paiements réels
 - Aiia en production
@@ -763,7 +763,7 @@ class PaymentAPIClient:
 client = PaymentAPIClient(
     client_id="votre_client_id",
     client_secret="votre_client_secret",
-    base_url="https://api.sandbox.votreplateforme.fr/v1"
+    base_url="https://api.sandbox.modupay.fr/v1"
 )
 
 client.authenticate()
@@ -909,7 +909,7 @@ class PaymentAPIClient {
 const client = new PaymentAPIClient(
   'votre_client_id',
   'votre_client_secret',
-  'https://api.sandbox.votreplateforme.fr/v1'
+  'https://api.sandbox.modupay.fr/v1'
 );
 
 await client.authenticate();
@@ -933,9 +933,9 @@ console.log('Organisation créée:', org.id);
 - Changelog : `/changelog`
 
 ### Assistance
-- Email : support-api@votreplateforme.fr
+- Email : support-api@modupay.fr
 - Slack : #api-support (accès partenaires)
-- Status page : https://status.votreplateforme.fr
+- Status page : https://status.modupay.fr
 
 ### SLA Production
 - Disponibilité : 99.9%
