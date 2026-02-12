@@ -49,7 +49,7 @@ Mairie de Lyon (Organization)
 ```python
 import requests
 
-API_BASE = "https://api.votreplateforme.fr/v1"
+API_BASE = "https://api.modupay.fr/v1"
 TOKEN = "votre_token_partenaire"
 
 # Créer l'organisation Mairie
