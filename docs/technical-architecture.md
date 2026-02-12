@@ -1315,6 +1315,6 @@ Effectuer trimestriellement :
 
 ## Contacts techniques
 
-- **Architecture** : architecture@votreplateforme.fr
-- **Sécurité** : security@votreplateforme.fr
-- **DevOps** : devops@votreplateforme.fr
+- **Architecture** : architecture@modupay.fr
+- **Sécurité** : security@modupay.fr
+- **DevOps** : devops@modupay.fr
